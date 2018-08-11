@@ -45,15 +45,84 @@
 
   ;; Exclude bold/italic from keywords
   (setq font-latex-deactivated-keyword-classes
-      '("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+	'("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+
+  ;; BEAMER
+
+  ;; allow for export=>beamer by placing
+
+  ;; #+LaTeX_CLASS: beamer in org files
+  (unless (boundp 'org-export-latex-classes)
+    (setq org-export-latex-classes nil))
+  (add-to-list 'org-export-latex-classes
+    ;; beamer class, for presentations
+    '("beamer"
+       "\\documentclass[11pt]{beamer}\n
+	\\mode<{{{beamermode}}}>\n
+	\\usetheme{{{{beamertheme}}}}\n
+	\\usecolortheme{{{{beamercolortheme}}}}\n
+	\\beamertemplateballitem\n
+	\\setbeameroption{show notes}
+	\\usepackage[utf8]{inputenc}\n
+	\\usepackage[T1]{fontenc}\n
+	\\usepackage{hyperref}\n
+	\\usepackage{color}
+	\\usepackage{listings}
+	\\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+    frame=single,
+    basicstyle=\\small,
+    showspaces=false,showstringspaces=false,
+    showtabs=false,
+    keywordstyle=\\color{blue}\\bfseries,
+    commentstyle=\\color{red},
+    }\n
+	\\usepackage{verbatim}\n
+	\\institute{{{{beamerinstitute}}}}\n          
+	 \\subject{{{{beamersubject}}}}\n"
+
+       ("\\section{%s}" . "\\section*{%s}")
+     
+       ("\\begin{frame}[fragile]\\frametitle{%s}"
+	 "\\end{frame}"
+	 "\\begin{frame}[fragile]\\frametitle{%s}"
+	 "\\end{frame}")))
+
+    ;; letter class, for formal letters
+
+    (add-to-list 'org-export-latex-classes
+
+    '("letter"
+       "\\documentclass[11pt]{letter}\n
+	\\usepackage[utf8]{inputenc}\n
+	\\usepackage[T1]{fontenc}\n
+	\\usepackage{color}"
+     
+       ("\\section{%s}" . "\\section*{%s}")
+       ("\\subsection{%s}" . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+       ("\\paragraph{%s}" . "\\paragraph*{%s}")
+       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 #+END_SRC
+
 * Org mode
 #+BEGIN_SRC emacs-lisp
-  ;; ORG MODE
-
   (add-hook 'org-mode-hook 'org-hide-block-all)
+
+  (org-babel-do-load-languages 'org-babel-load-languages
+			       '((latex . t)))
+
+  (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
+
+  ;; Open pdfs with evince
+  (setq org-file-apps
+      '(("\\.mm\\'" . default)
+	("\\.x?html?\\'" . default)
+	("\\.pdf\\'" . "evince %s")
+	(auto-mode . emacs)))
 #+END_SRC
-* C/c++ coding
+
+* C/C++ coding
+** Indentation
 #+BEGIN_SRC emacs-lisp
   ;; C indentation
 
@@ -62,33 +131,56 @@
 	tab-width 2
 	indent-tabs-mode t)
 #+END_SRC
+
 * Coding in general
-** Autocompletion
-#+BEGIN_SRC emacs-lisp
-  ;; (add-hook 'c++-mode-hook 'company-mode)
-  (add-hook 'after-init-hook 'global-company-mode)
-#+END_SRC
 ** Code folding
 #+BEGIN_SRC emacs-lisp
-  (defun hide()
-    (interactive)
-    (hs-minor-mode)
-    (hs-hide-all))
+  ;; (defun hide()
+  ;;  (interactive)
+  ;;  (hs-minor-mode)
+  ;;  (hs-hide-all))
 
-  (add-hook 'prog-mode-hook 'hide) ;; Run on startup /
+  ;; (add-hook 'prog-mode-hook 'hide) ;; Run on startup /
 
-  (defadvice goto-line
-      (after expand-after-goto-line activate compile)
-    "hideshow-expand affected block when using goto-line in a collapsed buffer"
-    (save-excursion
-      (hs-show-block))) ;; Expand on goto
+  ;; (defadvice goto-line
+  ;;    (after expand-after-goto-line activate compile)
+  ;;  "hideshow-expand affected block when using goto-line in a collapsed buffer"
+  ;;  (save-excursion
+  ;;    (hs-show-block))) ;; Expand on goto
 
-  (setq hs-isearch-open 'x)
-  (global-set-key (kbd "C-+") (kbd "C-c @ C-c")) ;; Toggles hiding
+  ;; (setq hs-isearch-open 'x)
+  ;; (global-set-key (kbd "C-+") (kbd "C-c @ C-c")) ;; Toggles hiding
 #+END_SRC
   
+** CEDET
+#+BEGIN_SRC emacs-lisp
+  (require 'cc-mode)
+  (require 'semantic)
+
+  (global-semanticdb-minor-mode 1)
+  (global-semantic-idle-scheduler-mode 1)
+
+  (semantic-mode 1)
+
+  (semantic-add-system-include "~/linux/kernel")
+  (semantic-add-system-include "~/linux/include")
+
+  (require 'ede)
+  (global-ede-mode)
+#+END_SRC
+
+** Parenthesis matching
+#+BEGIN_SRC emacs-lisp
+  (show-paren-mode)
+#+END_SRC
 * Looks
 #+BEGIN_SRC emacs-lisp
   (load-theme 'wheatgrass)
   ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
 #+END_SRC
+* Keyboard leyout (English)
+#+BEGIN_SRC emacs-lisp
+  (set-input-method "british")
+#+END_SRC
+
+* Git
