@@ -1,0 +1,16 @@
+* Company-mode for c autocompletion
+Install by:
+  M-x packages-list-packages
+
+Name of package:
+  company
+
+* AucTeX
+Install by:
+  M-x packages-list-packages
+
+Name of package:
+  auctex
+
+* CEDET
+package is built in
