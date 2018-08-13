@@ -211,18 +211,58 @@
 #+END_SRC
 
 * Looks
+** Theme
 #+BEGIN_SRC emacs-lisp
   (load-theme 'wheatgrass)
   ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
 
   (custom-set-faces
-   '(rainbow-delimiters-depth-1-face ((t (:foreground "red"))))
-   '(rainbow-delimiters-depth-2-face ((t (:foreground "yellow"))))
-   '(rainbow-delimiters-depth-3-face ((t (:foreground "blue"))))
+   '(default ((t (:foreground "white"))))
+   '(bold ((t (:weight bold))))
+   '(italic ((t (:slant italic))))
+   '(bold-italic ((t (:weight bold :slant italic))))
+   '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
+   '(fixed-pitch ((t (:family "Monospace"))))
+   '(variable-pitch ((t (:family "Sans Serif"))))
+   '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
+   '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
+   '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
+   '(highlight ((t (:foreground "white" :background "dark green"))))
+   '(match ((t (:background "RoyalBlue3"))))
+   '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
+   '(lazy-highlight ((t (:background "gray25"))))
+   )
+#+END_SRC
+
+** Font-lock-*
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(font-lock-comment-face ((t :foreground "gray50"))))
+#+END_SRC
+
+** Org mode
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(org-level-1 ((t (:foreground "green"))))
+   '(org-level-2 ((t (:foreground "cyan"))))
+   '(org-level-3 ((t (:foreground "white"))))
+   '(org-block ((t (:inherit 'shadow))))
+   '(org-default ((t (:inherit 'default))))
+   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
+   '(org-block-end-line ((t (:inherit 'org-meta-line))))
+   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
+#+END_SRC
+
+** Rainbow delimiters
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "red3"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "yellow2"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "blue3"))))
    '(rainbow-delimiters-depth-4-face ((t (:foreground "green"))))
-   '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta3"))))
    '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan"))))
-   '(rainbow-delimiters-depth-7-face ((t (:foreground "orange"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "dark orange"))))
    '(rainbow-delimiters-depth-8-face ((t (:foreground "red"))))
    '(rainbow-delimiters-depth-9-face ((t (:foreground "red")))))
 #+END_SRC
@@ -239,3 +279,8 @@
   ;; (require 'ill-mode) 
 #+END_SRC
 
+* Buffers
+#+BEGIN_SRC emacs-lisp
+  ;; Make C-x k, remove the window afterwards
+  (global-set-key (kbd "C-x k") (kbd "C-x 4 0"))
+#+END_SRC
