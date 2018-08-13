@@ -263,8 +263,14 @@
    '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta3"))))
    '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan"))))
    '(rainbow-delimiters-depth-7-face ((t (:foreground "dark orange"))))
-   '(rainbow-delimiters-depth-8-face ((t (:foreground "red"))))
-   '(rainbow-delimiters-depth-9-face ((t (:foreground "red")))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "white"))))
+   '(rainbow-delimiters-depth-9-face ((t (:foreground "gray"))))
+   '(rainbow-delimiters-base-face ((t (:background: ""))))
+   '(rainbow-delimiters-mismatched-face ((t (:foreground "blue" :inherit 'rainbow-delimiters-base-face))))
+   '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
+
+  ) )) (( (
+
 #+END_SRC
 
 * Git
