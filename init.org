@@ -34,6 +34,7 @@
   (column-number-mode 1) ;; Show column number
 #+END_SRC
 * LaTeX
+** AUCTEX
 #+BEGIN_SRC emacs-lisp
   ;; AUC-TEX
 
@@ -46,9 +47,10 @@
   ;; Exclude bold/italic from keywords
   (setq font-latex-deactivated-keyword-classes
 	'("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+#+END_SRC
 
-  ;; BEAMER
-
+** BEAMER
+#+BEGIN_SRC emacs-lisp
   ;; allow for export=>beamer by placing
 
   ;; #+LaTeX_CLASS: beamer in org files
@@ -104,6 +106,11 @@
        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 #+END_SRC
 
+** LaTeX Preview Pane
+#+BEGIN_SRC emacs-lisp
+  (latex-preview-pane-enable)
+#+END_SRC
+
 * Org mode
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'org-hide-block-all)
@@ -153,20 +160,46 @@
 #+END_SRC
   
 ** CEDET
+*** Semantic
 #+BEGIN_SRC emacs-lisp
   (require 'cc-mode)
   (require 'semantic)
 
-  (global-semanticdb-minor-mode 1)
-  (global-semantic-idle-scheduler-mode 1)
-
   (semantic-mode 1)
+
+  ;; (global-semantic-idle-completions-mode) ;; AUTO-COMPLETE
 
   (semantic-add-system-include "~/linux/kernel")
   (semantic-add-system-include "~/linux/include")
 
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode) ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode) ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)  ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)  ;; COMMENT OUT
+
+  (require 'semantic/ia)
+  (require 'semantic/bovine/c)
+  (require 'semantic/bovine/gcc)
+
+  (setq semantic-complete-inline-analyzer-displayor-class
+	'semantic-displayor-ghost)
+#+END_SRC
+
+*** EDE
+#+BEGIN_SRC emacs-lisp
   (require 'ede)
   (global-ede-mode)
+
+  (ede-cpp-root-project "In the Land of Ling"
+			:file "~/Dropbox/In the land of Ling/Small project/Code/Makefile"
+			:include-path '()
+			:system-include-path '("~/linux"))
 #+END_SRC
 
 ** Parenthesis matching
@@ -184,3 +217,9 @@
 #+END_SRC
 
 * Git
+* custom modes
+** ill-mode
+#+BEGIN_SRC emacs-lisp
+  ;; (require 'ill-mode) 
+#+END_SRC
+

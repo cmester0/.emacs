@@ -1,16 +1,31 @@
-* Company-mode for c autocompletion
+* File: early-init.el
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (package-initialized)
+#+END_SRC
+
+* GNU-ELPA
+** AucTeX
 Install by:
-  M-x packages-list-packages
+  M-x package-install auctex
 
-Name of package:
-  company
+** CEDET
+Package is built in
 
-* AucTeX
+* Melpa
+** LaTeX Preview Pane
 Install by:
-  M-x packages-list-packages
+  M-x package-install latex-preview-pane
 
-Name of package:
-  auctex
+** Magit
+Install by:
+  M-x package-install latex-preview-pane
 
-* CEDET
-package is built in
+** Multiple Cursors
+Install by:
+  M-x package-install latex-preview-pane
+
+** Rainbow-delimiters
+Install by:
+  M-x package-install latex-preview-pane

@@ -1,0 +1,7 @@
+* Load melpa
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
+  (package-initialize)
+#+END_SRC
+
