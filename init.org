@@ -6,24 +6,11 @@
 
 * Better start
 #+BEGIN_SRC emacs-lisp
+  (custom-set-variables
+  '(inhibit-startup-screen t))
+
   (setq make-backup-files nil) ; stop creating backup~ files
   (setq auto-save-default nil) ; stop creating #autosave# files
-
-  (custom-set-variables
-   ;; custom-set-variables was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(inhibit-startup-screen t)
-   '(org-babel-load-languages '((emacs-lisp . t) (C . t)))
-   '(package-selected-packages '(company auctex)))
-  (custom-set-faces
-   ;; custom-set-faces was added by Custom.
-   ;; If you edit it by hand, you could mess it up, so be careful.
-   ;; Your init file should contain only one such instance.
-   ;; If there is more than one, they won't work right.
-   '(font-latex-subscript-face ((t nil)))
-   '(font-latex-superscript-face ((t nil))))
 
   (setq visible-bell t) ; os / emacs sounds off
 
@@ -33,6 +20,7 @@
   (line-number-mode 1)   ;; Show line number
   (column-number-mode 1) ;; Show column number
 #+END_SRC
+
 * LaTeX
 ** AUCTEX
 #+BEGIN_SRC emacs-lisp
@@ -205,18 +193,46 @@
 ** Parenthesis matching
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode)
+
+  (require 'rainbow-delimiters)
+  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+  ;; (global-rainbow-delimiters-mode)
 #+END_SRC
+
+** Multiple Cursors
+#+BEGIN_SRC emacs-lisp
+  (require 'multiple-cursors)
+
+  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+
+  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+#+END_SRC
+
 * Looks
 #+BEGIN_SRC emacs-lisp
   (load-theme 'wheatgrass)
   ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
-#+END_SRC
-* Keyboard leyout (English)
-#+BEGIN_SRC emacs-lisp
-  (set-input-method "british")
+
+  (custom-set-faces
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "red"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "yellow"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "blue"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "green"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "orange"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "red"))))
+   '(rainbow-delimiters-depth-9-face ((t (:foreground "red")))))
 #+END_SRC
 
 * Git
+** Magit
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
+#+END_SRC
+
 * custom modes
 ** ill-mode
 #+BEGIN_SRC emacs-lisp
