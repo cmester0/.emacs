@@ -6,6 +6,10 @@ Install by:
 ** CEDET
 Package is built in
 
+** sml-mode
+Install by:
+  M-x package-install sml-mode
+
 * Melpa
 ** LaTeX Preview Pane
 Install by:
@@ -21,4 +25,8 @@ Install by:
 
 ** Rainbow-delimiters
 Install by:
-  M-x package-install latex-preview-pane
+  M-x package-install Rainbow-delimiters
+
+** Tuareg
+Install by:
+  M-x package-install Tuareg

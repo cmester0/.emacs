@@ -268,9 +268,6 @@
    '(rainbow-delimiters-base-face ((t (:background: ""))))
    '(rainbow-delimiters-mismatched-face ((t (:foreground "blue" :inherit 'rainbow-delimiters-base-face))))
    '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
-
-  ) )) (( (
-
 #+END_SRC
 
 * Git
