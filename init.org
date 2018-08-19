@@ -103,8 +103,10 @@
 #+BEGIN_SRC emacs-lisp
   (add-hook 'org-mode-hook 'org-hide-block-all)
 
-  (org-babel-do-load-languages 'org-babel-load-languages
-			       '((latex . t)))
+  (org-babel-do-load-languages
+   'org-babel-load-languages '((latex . t)
+			       (C . t)
+			       (python .t )))
 
   (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
 
@@ -237,20 +239,21 @@
 ** Font-lock-*
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
-   '(font-lock-comment-face ((t :foreground "gray50"))))
-#+END_SRC
-
-** Org mode
-#+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(org-level-1 ((t (:foreground "green"))))
-   '(org-level-2 ((t (:foreground "cyan"))))
-   '(org-level-3 ((t (:foreground "white"))))
-   '(org-block ((t (:inherit 'shadow))))
-   '(org-default ((t (:inherit 'default))))
-   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
-   '(org-block-end-line ((t (:inherit 'org-meta-line))))
-   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
+   '(font-lock-builtin-face ((t :foreground "LightSteelBlue")))
+   '(font-lock-comment-delimiter-face ((t :inherit 'font-lock-comment-face)))
+   '(font-lock-comment-face ((t :foreground "gray50"))) ;; gray50
+   '(font-lock-constant-face ((t :foreground "sky blue"))) ;; turquoise
+   '(font-lock-doc-face ((t :inherit 'font-lock-string-face)))
+   '(font-lock-function-name-face ((t :foreground "cyan"))) ;; pale green
+   '(font-lock-keyword-face ((t :foreground "gray70"))) ;; white
+   '(font-lock-negation-char-face)
+   '(font-lock-preprocessor-face ((t :inherit 'font-lock-builtin-face)))
+   '(font-lock-regexp-grouping-backslash ((t :inherit 'bold)))
+   '(font-lock-regexp-grouping-construct ((t :inherit 'bold)))
+   '(font-lock-string-face ((t :foreground "dark khaki")))
+   '(font-lock-type-face ((t :foreground "green"))) ;; aquamarine
+   '(font-lock-variable-name-face ((t :foreground "yellow green"))) ;; 
+   '(font-lock-warning-face ((t :inherit 'error))))
 #+END_SRC
 
 ** Rainbow delimiters
@@ -270,6 +273,26 @@
    '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
 #+END_SRC
 
+** Modes
+*** Org mode
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(org-level-1 ((t (:foreground "green"))))
+   '(org-level-2 ((t (:foreground "cyan"))))
+   '(org-level-3 ((t (:foreground "white"))))
+   '(org-block ((t (:inherit 'shadow))))
+   '(org-default ((t (:inherit 'default))))
+   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
+   '(org-block-end-line ((t (:inherit 'org-meta-line))))
+   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
+#+END_SRC
+
+
+*** Tuarg mode (ocaml)
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(tuareg-font-lock-governing-face ((t :foreground "magenta3" :weight bold))))
+#+END_SRC
 * Git
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -282,10 +305,5 @@
   ;; (require 'ill-mode) 
 #+END_SRC
 
-* Buffers
-#+BEGIN_SRC emacs-lisp
-  ;; Make C-x k, remove the window afterwards
-  (global-set-key (kbd "C-x k") (kbd "C-x 4 0"))
-#+END_SRC
 
 
