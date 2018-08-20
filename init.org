@@ -21,6 +21,47 @@
   (column-number-mode 1) ;; Show column number
 #+END_SRC
 
+* List of used packages
+ - AUCTEX (for LaTeX)
+ - SML-mode
+ - Magit (for better git)
+ - Multiple-cursors
+ - Rainbow-delimiters
+ - Tuareg (for ocaml coding)
+ - Flycheck (syntax checking)
+   - Flycheck-color-mode-line
+ - Powerline
+
+* Install missing packages
+#+BEGIN_SRC emacs-lisp
+  (mapcar
+   (lambda (package)
+     (unless (package-installed-p package)
+       (package-install package)))
+   '(auctex
+     sml-mode
+     magit
+     multiple-cursors
+     rainbow-delimiters
+     tuareg
+     flycheck
+     flycheck-color-mode-line
+     powerline))
+#+END_SRC
+
+* FUN
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
+
+* Flycheck
+#+BEGIN_SRC emacs-lisp
+  ;; (global-flycheck-mode)
+
+  (eval-after-load "flycheck"
+    '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+#+END_SRC
+
 * LaTeX
 ** AUCTEX
 #+BEGIN_SRC emacs-lisp
@@ -35,6 +76,38 @@
   ;; Exclude bold/italic from keywords
   (setq font-latex-deactivated-keyword-classes
 	'("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+
+  ;; More recommended setup
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+
+  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (setq reftex-plug-into-AUCTeX t)
+
+  (setq TeX-PDF-mode t)
+
+  ;; Evince incorporation
+
+  (defun enable-evince-sync ()
+    (require 'dbus)
+    (when (and
+	   (eq window-system 'x)
+	   (fboundp 'dbus-register-signal))
+      (unless *dbus-evince-signal*
+	(setf *dbus-evince-signal*
+	      (dbus-register-signal
+	       :session nil "/org/gnome/evince/Window/0"
+	       "org.gnome.evince.Window" "SyncSource"
+	       'th-evince-sync)))))
+
+  (add-hook 'LaTeX-mode-hook 'enable-evince-sync)
+
+  ;; Look into CDLaTeX
 #+END_SRC
 
 ** BEAMER
@@ -92,11 +165,6 @@
        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
        ("\\paragraph{%s}" . "\\paragraph*{%s}")
        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-#+END_SRC
-
-** LaTeX Preview Pane
-#+BEGIN_SRC emacs-lisp
-  (latex-preview-pane-enable)
 #+END_SRC
 
 * Org mode
@@ -234,6 +302,14 @@
    '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
    '(lazy-highlight ((t (:background "gray25"))))
    )
+
+
+  (custom-set-faces
+  '(mode-line ((t (:background "grey75" :foreground "black"))))
+   '(mode-line-buffer-id ((t (:weight bold))))
+   '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
+   '(mode-line-emphasis ((t (:weight bold))))
+   '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
 #+END_SRC
 
 ** Font-lock-*
@@ -259,27 +335,46 @@
 ** Rainbow delimiters
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
-   '(rainbow-delimiters-depth-1-face ((t (:foreground "red3"))))
-   '(rainbow-delimiters-depth-2-face ((t (:foreground "yellow2"))))
-   '(rainbow-delimiters-depth-3-face ((t (:foreground "blue3"))))
-   '(rainbow-delimiters-depth-4-face ((t (:foreground "green"))))
-   '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta3"))))
-   '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan"))))
-   '(rainbow-delimiters-depth-7-face ((t (:foreground "dark orange"))))
-   '(rainbow-delimiters-depth-8-face ((t (:foreground "white"))))
-   '(rainbow-delimiters-depth-9-face ((t (:foreground "gray"))))
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "purple3"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "red3"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "orange3"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "yellow3"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "green3"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan3"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "blue3"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta3"))))
+   '(rainbow-delimiters-depth-9-face ((t (:foreground "DeepPink3"))))
    '(rainbow-delimiters-base-face ((t (:background: ""))))
    '(rainbow-delimiters-mismatched-face ((t (:foreground "blue" :inherit 'rainbow-delimiters-base-face))))
    '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
+#+END_SRC
+
+** Powerline
+#+BEGIN_SRC emacs-lisp
+  (require 'powerline)
+  (powerline-default-theme)
+
+  (custom-set-faces
+  '(powerline-active0 ((t (:foreground "white" :background "purple3"))))
+  '(powerline-active1 ((t (:foreground "black" :background "yellow3"))))
+  '(powerline-active2 ((t (:foreground "white" :background "DeepPink3" :distant-foreground "green"))))
+  '(powerline-inactive0 ((t (:foreground "gray60" :background "purple4"))))
+  '(powerline-inactive1 ((t (:foreground "gray30" :background "yellow4"))))
+  '(powerline-inactive2 ((t (:foreground "gray50" :background "DeepPink4")))))
 #+END_SRC
 
 ** Modes
 *** Org mode
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
-   '(org-level-1 ((t (:foreground "green"))))
-   '(org-level-2 ((t (:foreground "cyan"))))
-   '(org-level-3 ((t (:foreground "white"))))
+   '(org-level-1 ((t (:foreground "purple3"))))
+   '(org-level-2 ((t (:foreground "red3"))))
+   '(org-level-3 ((t (:foreground "orange3"))))
+   '(org-level-4 ((t (:foreground "yellow3"))))
+   '(org-level-5 ((t (:foreground "green3"))))
+   '(org-level-6 ((t (:foreground "cyan3"))))
+   '(org-level-7 ((t (:foreground "blue3"))))
+   '(org-level-8 ((t (:foreground "magenta3"))))
    '(org-block ((t (:inherit 'shadow))))
    '(org-default ((t (:inherit 'default))))
    '(org-block-begin-line ((t (:inherit 'org-meta-line))))
@@ -287,19 +382,19 @@
    '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
 #+END_SRC
 
-
 *** Tuarg mode (ocaml)
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
    '(tuareg-font-lock-governing-face ((t :foreground "magenta3" :weight bold))))
 #+END_SRC
+
 * Git
 ** Magit
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
 #+END_SRC
 
-* custom modes
+* Custom modes
 ** ill-mode
 #+BEGIN_SRC emacs-lisp
   ;; (require 'ill-mode) 
