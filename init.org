@@ -367,25 +367,19 @@
 *** Org mode
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
-   '(org-level-1 ((t (:foreground "purple3"))))
-   '(org-level-2 ((t (:foreground "red3"))))
-   '(org-level-3 ((t (:foreground "orange3"))))
-   '(org-level-4 ((t (:foreground "yellow3"))))
-   '(org-level-5 ((t (:foreground "green3"))))
-   '(org-level-6 ((t (:foreground "cyan3"))))
-   '(org-level-7 ((t (:foreground "blue3"))))
-   '(org-level-8 ((t (:foreground "magenta3"))))
+   '(org-level-1 ((t (:foreground "purple1"))))
+   '(org-level-2 ((t (:foreground "red1"))))
+   '(org-level-3 ((t (:foreground "orange1"))))
+   '(org-level-4 ((t (:foreground "yellow1"))))
+   '(org-level-5 ((t (:foreground "green1"))))
+   '(org-level-6 ((t (:foreground "cyan1"))))
+   '(org-level-7 ((t (:foreground "blue1"))))
+   '(org-level-8 ((t (:foreground "magenta1"))))
    '(org-block ((t (:inherit 'shadow))))
    '(org-default ((t (:inherit 'default))))
    '(org-block-begin-line ((t (:inherit 'org-meta-line))))
    '(org-block-end-line ((t (:inherit 'org-meta-line))))
    '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
-#+END_SRC
-
-*** Tuarg mode (ocaml)
-#+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(tuareg-font-lock-governing-face ((t :foreground "magenta3" :weight bold))))
 #+END_SRC
 
 * Git
