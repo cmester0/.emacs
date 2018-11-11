@@ -31,6 +31,15 @@
  - Flycheck (syntax checking)
    - Flycheck-color-mode-line
  - Powerline
+ - Company
+   - company (for c,c++,...)
+   - company-auctex
+   - company-coq
+   - company-rtags
+ - Scala mode
+
+TODO:
+ - Flyspell
 
 * Install missing packages
 #+BEGIN_SRC emacs-lisp
@@ -46,12 +55,117 @@
      tuareg
      flycheck
      flycheck-color-mode-line
-     powerline))
+     powerline
+     company
+     company-auctex
+     company-coq
+     company-rtags
+     scala-mode))
 #+END_SRC
 
-* FUN
+* Looks
+** Theme
 #+BEGIN_SRC emacs-lisp
+  (load-theme 'wheatgrass)
+  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
 
+  (custom-set-faces
+   '(default ((t (:foreground "white"))))
+   '(bold ((t (:weight bold))))
+   '(italic ((t (:slant italic))))
+   '(bold-italic ((t (:weight bold :slant italic))))
+   '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
+   '(fixed-pitch ((t (:family "Monospace"))))
+   '(variable-pitch ((t (:family "Sans Serif"))))
+   '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
+   '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
+   '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
+   '(highlight ((t (:foreground "white" :background "dark green"))))
+   '(match ((t (:background "RoyalBlue3"))))
+   '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
+   '(lazy-highlight ((t (:background "gray25"))))
+   )
+
+
+  (custom-set-faces
+  '(mode-line ((t (:background "grey75" :foreground "black"))))
+   '(mode-line-buffer-id ((t (:weight bold))))
+   '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
+   '(mode-line-emphasis ((t (:weight bold))))
+   '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
+#+END_SRC
+
+** Font-lock-*
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(font-lock-builtin-face ((t :foreground "LightSteelBlue")))
+   '(font-lock-comment-delimiter-face ((t :inherit 'font-lock-comment-face)))
+   '(font-lock-comment-face ((t :foreground "gray50"))) ;; gray50
+   '(font-lock-constant-face ((t :foreground "sky blue"))) ;; turquoise
+   '(font-lock-doc-face ((t :inherit 'font-lock-string-face)))
+   '(font-lock-function-name-face ((t :foreground "cyan"))) ;; pale green
+   '(font-lock-keyword-face ((t :foreground "gray70"))) ;; white
+   '(font-lock-negation-char-face)
+   '(font-lock-preprocessor-face ((t :inherit 'font-lock-builtin-face)))
+   '(font-lock-regexp-grouping-backslash ((t :inherit 'bold)))
+   '(font-lock-regexp-grouping-construct ((t :inherit 'bold)))
+   '(font-lock-string-face ((t :foreground "dark khaki")))
+   '(font-lock-type-face ((t :foreground "green"))) ;; aquamarine
+   '(font-lock-variable-name-face ((t :foreground "yellow green"))) ;; 
+   '(font-lock-warning-face ((t :inherit 'error))))
+#+END_SRC
+
+** Rainbow delimiters
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(rainbow-delimiters-depth-1-face ((t (:foreground "purple3"))))
+   '(rainbow-delimiters-depth-2-face ((t (:foreground "red3"))))
+   '(rainbow-delimiters-depth-3-face ((t (:foreground "orange3"))))
+   '(rainbow-delimiters-depth-4-face ((t (:foreground "yellow3"))))
+   '(rainbow-delimiters-depth-5-face ((t (:foreground "green3"))))
+   '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan3"))))
+   '(rainbow-delimiters-depth-7-face ((t (:foreground "blue3"))))
+   '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta3"))))
+   '(rainbow-delimiters-depth-9-face ((t (:foreground "DeepPink3"))))
+   '(rainbow-delimiters-base-face ((t (:background: ""))))
+   '(rainbow-delimiters-mismatched-face ((t (:foreground "blue" :inherit 'rainbow-delimiters-base-face))))
+   '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
+#+END_SRC
+
+** Powerline
+#+BEGIN_SRC emacs-lisp
+  (require 'powerline)
+  (powerline-default-theme)
+
+  (custom-set-faces
+   '(powerline-active0 ((t (:inherit nil :foreground "white" :background "purple3"))))
+   '(powerline-active1 ((t (:inherit nil :foreground "black" :background "yellow3"))))
+   '(powerline-active2 ((t (:inherit nil :foreground "white" :background "DeepPink3" :distant-foreground "green"))))
+   '(powerline-inactive0 ((t (:inherit nil :foreground "gray60" :background "purple4"))))
+   '(powerline-inactive1 ((t (:inherit nil :foreground "gray30" :background "yellow4"))))
+   '(powerline-inactive2 ((t (:inherit nil :foreground "gray50" :background "DeepPink4")))))
+#+END_SRC
+
+** Modes
+*** Org mode
+#+BEGIN_SRC emacs-lisp
+  ;; Basics
+  (custom-set-faces
+   '(org-level-1 ((t (:foreground "purple1"))))
+   '(org-level-2 ((t (:foreground "red1"))))
+   '(org-level-3 ((t (:foreground "orange1"))))
+   '(org-level-4 ((t (:foreground "yellow1"))))
+   '(org-level-5 ((t (:foreground "green1"))))
+   '(org-level-6 ((t (:foreground "cyan1"))))
+   '(org-level-7 ((t (:foreground "blue1"))))
+   '(org-level-8 ((t (:foreground "magenta1"))))
+   '(org-block ((t (:inherit 'shadow))))
+   '(org-default ((t (:inherit 'default))))
+   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
+   '(org-block-end-line ((t (:inherit 'org-meta-line))))
+   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
+   
+			
 #+END_SRC
 
 * Flycheck
@@ -78,36 +192,26 @@
 	'("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
 
   ;; More recommended setup
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  (setq-default TeX-master nil)
+  ;; (setq TeX-auto-save t)
+  ;; (setq TeX-parse-self t)
+  ;; (setq-default TeX-master nil)
 
-  (add-hook 'LaTeX-mode-hook 'visual-line-mode)
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  ;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  ;; (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+  ;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (setq reftex-plug-into-AUCTeX t)
-
-  (setq TeX-PDF-mode t)
-
-  ;; Evince incorporation
-
-  (defun enable-evince-sync ()
-    (require 'dbus)
-    (when (and
-	   (eq window-system 'x)
-	   (fboundp 'dbus-register-signal))
-      (unless *dbus-evince-signal*
-	(setf *dbus-evince-signal*
-	      (dbus-register-signal
-	       :session nil "/org/gnome/evince/Window/0"
-	       "org.gnome.evince.Window" "SyncSource"
-	       'th-evince-sync)))))
-
-  (add-hook 'LaTeX-mode-hook 'enable-evince-sync)
+  ;; (setq reftex-plug-into-AUCTeX t)
 
   ;; Look into CDLaTeX
+
+  ;; Preview LaTeX
+  ;; (add-hook 'LaTeX-mode-hook 'preview-cache-preamble)
+
+  (load "auctex.el" nil t t)
+
+  (setq preview-auto-cache-preamble t)
+
+  ;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
 #+END_SRC
 
 ** BEAMER
@@ -178,12 +282,92 @@
 
   (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
 
+  ;;; EXTRA FROM INTERNET
   ;; Open pdfs with evince
   (setq org-file-apps
       '(("\\.mm\\'" . default)
 	("\\.x?html?\\'" . default)
 	("\\.pdf\\'" . "evince %s")
 	(auto-mode . emacs)))
+
+  (set 'org-startup-truncated nil)
+
+
+      (require 'org-latex)
+      (setq org-export-latex-listings t) 
+      ;; Originally taken from Bruno Tavernier: \ http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
+      ;; but adapted to use latexmk 4.20 or higher.  
+      (defun my-auto-tex-cmd ()
+	"When exporting from .org with latex, automatically run latex,
+	 pdflatex, or xelatex as appropriate, using latexmk."
+	(let ((texcmd)))
+	;; default command: oldstyle latex via dvi
+	(setq texcmd "latexmk -dvi -pdfps %f")        
+	;; pdflatex -> .pdf
+	(if (string-match "LATEX_CMD: pdflatex" (buffer-string))
+	    (setq texcmd "latexmk -pdf %f"))
+	;; xelatex -> .pdf
+	(if (string-match "LATEX_CMD: xelatex" (buffer-string))
+	    (setq texcmd "latexmk -pdflatex=xelatex -pdf %f"))
+	;; LaTeX compilation command
+	(setq org-latex-to-pdf-process (list texcmd)))
+	(add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
+	;; Default packages included in every tex file, pdflatex or xelatex
+	(setq org-export-latex-packages-alist
+	'(("" "graphicx" t)
+	("" "longtable" nil)
+	("" "float" nil)))
+      
+	(defun my-auto-tex-parameters ()
+	"Automatically select the tex packages to include."
+	;; default packages for ordinary latex or pdflatex export
+	(setq org-export-latex-default-packages-alist
+	'(("AUTO" "inputenc" t)
+	("T1"   "fontenc"   t)
+	(""     "fixltx2e"  nil)
+	(""     "wrapfig"   nil)
+	(""     "soul"      t)
+	(""     "textcomp"  t)
+	(""     "marvosym"  t)
+	(""     "wasysym"   t)
+	(""     "latexsym"  t)
+	(""     "amssymb"   t)
+	(""     "hyperref"  nil)))
+      
+	  ;; Packages to include when xelatex is used
+	  ;; (see https://github.com/kjhealy/latex-custom-kjh for the 
+	  ;; non-standard ones.)
+	  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+	      (setq org-export-latex-default-packages-alist
+		    '(("" "fontspec" t)
+		      ("" "xunicode" t)
+		      ("" "url" t)
+		      ("" "rotating" t)
+		      ("" "memoir-article-styles" t)
+		      ("american" "babel" t)
+		      ("babel" "csquotes" t)
+		      ("" "listings" nil)
+		      ("" "listings-sweave-xelatex" nil)
+		      ("svgnames" "xcolor" t)
+		      ("" "soul" t)
+		      ("xetex, colorlinks=true, urlcolor=FireBrick, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)
+		      )))
+        
+	  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
+	  (setq org-export-latex-classes
+	  (cons '("article"
+	  "\\documentclass[11pt,article,oneside]{memoir}
+	  \\input{vc}
+	  \\usepackage[style=authoryear-comp-ajs, abbreviate=true]{biblatex}
+	  \\bibliography{socbib}"
+	  ("\\section{%s}" . "\\section*{%s}")
+	  ("\\subsection{%s}" . "\\subsection*{%s}")
+	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
+	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+	  org-export-latex-classes))))  
+        
+	  (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)
 #+END_SRC
 
 * C/C++ coding
@@ -280,106 +464,12 @@
   (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 #+END_SRC
 
-* Looks
-** Theme
+* Company
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
-  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
-
-  (custom-set-faces
-   '(default ((t (:foreground "white"))))
-   '(bold ((t (:weight bold))))
-   '(italic ((t (:slant italic))))
-   '(bold-italic ((t (:weight bold :slant italic))))
-   '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
-   '(fixed-pitch ((t (:family "Monospace"))))
-   '(variable-pitch ((t (:family "Sans Serif"))))
-   '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
-   '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
-   '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
-   '(highlight ((t (:foreground "white" :background "dark green"))))
-   '(match ((t (:background "RoyalBlue3"))))
-   '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
-   '(lazy-highlight ((t (:background "gray25"))))
-   )
-
-
-  (custom-set-faces
-  '(mode-line ((t (:background "grey75" :foreground "black"))))
-   '(mode-line-buffer-id ((t (:weight bold))))
-   '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
-   '(mode-line-emphasis ((t (:weight bold))))
-   '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
-#+END_SRC
-
-** Font-lock-*
-#+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(font-lock-builtin-face ((t :foreground "LightSteelBlue")))
-   '(font-lock-comment-delimiter-face ((t :inherit 'font-lock-comment-face)))
-   '(font-lock-comment-face ((t :foreground "gray50"))) ;; gray50
-   '(font-lock-constant-face ((t :foreground "sky blue"))) ;; turquoise
-   '(font-lock-doc-face ((t :inherit 'font-lock-string-face)))
-   '(font-lock-function-name-face ((t :foreground "cyan"))) ;; pale green
-   '(font-lock-keyword-face ((t :foreground "gray70"))) ;; white
-   '(font-lock-negation-char-face)
-   '(font-lock-preprocessor-face ((t :inherit 'font-lock-builtin-face)))
-   '(font-lock-regexp-grouping-backslash ((t :inherit 'bold)))
-   '(font-lock-regexp-grouping-construct ((t :inherit 'bold)))
-   '(font-lock-string-face ((t :foreground "dark khaki")))
-   '(font-lock-type-face ((t :foreground "green"))) ;; aquamarine
-   '(font-lock-variable-name-face ((t :foreground "yellow green"))) ;; 
-   '(font-lock-warning-face ((t :inherit 'error))))
-#+END_SRC
-
-** Rainbow delimiters
-#+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(rainbow-delimiters-depth-1-face ((t (:foreground "purple3"))))
-   '(rainbow-delimiters-depth-2-face ((t (:foreground "red3"))))
-   '(rainbow-delimiters-depth-3-face ((t (:foreground "orange3"))))
-   '(rainbow-delimiters-depth-4-face ((t (:foreground "yellow3"))))
-   '(rainbow-delimiters-depth-5-face ((t (:foreground "green3"))))
-   '(rainbow-delimiters-depth-6-face ((t (:foreground "cyan3"))))
-   '(rainbow-delimiters-depth-7-face ((t (:foreground "blue3"))))
-   '(rainbow-delimiters-depth-8-face ((t (:foreground "magenta3"))))
-   '(rainbow-delimiters-depth-9-face ((t (:foreground "DeepPink3"))))
-   '(rainbow-delimiters-base-face ((t (:background: ""))))
-   '(rainbow-delimiters-mismatched-face ((t (:foreground "blue" :inherit 'rainbow-delimiters-base-face))))
-   '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
-#+END_SRC
-
-** Powerline
-#+BEGIN_SRC emacs-lisp
-  (require 'powerline)
-  (powerline-default-theme)
-
-  (custom-set-faces
-  '(powerline-active0 ((t (:foreground "white" :background "purple3"))))
-  '(powerline-active1 ((t (:foreground "black" :background "yellow3"))))
-  '(powerline-active2 ((t (:foreground "white" :background "DeepPink3" :distant-foreground "green"))))
-  '(powerline-inactive0 ((t (:foreground "gray60" :background "purple4"))))
-  '(powerline-inactive1 ((t (:foreground "gray30" :background "yellow4"))))
-  '(powerline-inactive2 ((t (:foreground "gray50" :background "DeepPink4")))))
-#+END_SRC
-
-** Modes
-*** Org mode
-#+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(org-level-1 ((t (:foreground "purple1"))))
-   '(org-level-2 ((t (:foreground "red1"))))
-   '(org-level-3 ((t (:foreground "orange1"))))
-   '(org-level-4 ((t (:foreground "yellow1"))))
-   '(org-level-5 ((t (:foreground "green1"))))
-   '(org-level-6 ((t (:foreground "cyan1"))))
-   '(org-level-7 ((t (:foreground "blue1"))))
-   '(org-level-8 ((t (:foreground "magenta1"))))
-   '(org-block ((t (:inherit 'shadow))))
-   '(org-default ((t (:inherit 'default))))
-   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
-   '(org-block-end-line ((t (:inherit 'org-meta-line))))
-   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
+  (require 'company)
+  (add-hook 'after-init-hook 'global-company-mode)
+  ;; (define-key c-mode-map  [(tab)] 'company-complete)
+  ;; (define-key c++-mode-map  [(tab)] 'company-complete)
 #+END_SRC
 
 * Git
@@ -396,3 +486,44 @@
 
 
 
+
+
+#+BEGIN_SRC latex
+  \[
+    \begin{matrix}
+      a & b & c \\
+      d & e & f \\
+      g & h & i \\
+    \end{matrix}
+  \]
+#+END_SRC
+
+* Coq
+#+BEGIN_SRC emacs-lisp
+  (setq coq-prog-name "/home/lasse/opam-coq.8.8.2/system/bin/coqtop")
+  
+  ;; Load company-coq when opening Coq files
+  (add-hook 'coq-mode-hook #'company-coq-mode)
+#+END_SRC
+  
+* Display Batery Mode
+#+BEGIN_SRC emacs-lisp
+  (display-battery-mode 1)
+#+END_SRC
+
+* RTags
+#+BEGIN_SRC emacs-lisp
+  (load-file "~/.emacs.d/elpa/rtags-20180925.641/rtags.el")
+  (rtags-start-process-unless-running)
+
+  (require 'rtags)
+
+  (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
+  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
+
+  (setq rtags-autostart-diagnostics t)
+  (setq rtags-completions-enabled t)
+
+  (push 'company-rtags company-backends)
+#+END_SRC
