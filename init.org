@@ -37,6 +37,7 @@
    - company-coq
    - company-rtags
  - Scala mode
+ - Haskell-mode
 
 TODO:
  - Flyspell
@@ -60,7 +61,8 @@ TODO:
      company-auctex
      company-coq
      company-rtags
-     scala-mode))
+     scala-mode
+     haskell-mode))
 #+END_SRC
 
 * Looks
@@ -168,6 +170,19 @@ TODO:
 			
 #+END_SRC
 
+** Font
+#+BEGIN_SRC emacs-lisp
+  (prefer-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
+  (set-default-coding-systems 'utf-8-unix)
+
+  ;; ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
+  ;; specify font for '⦅' and '⦆'
+  (set-fontset-font t 'unicode (font-spec :family "Noto Mono" :height 100) nil 'append)
+  (set-fontset-font t '(#x2985 . #x2986) (font-spec :family "DejaVu Sans Mono" :height 10) nil 'append)
+  (set-fontset-font t '(#x4e00 . #x9fff) (font-spec :family "WenQuanYi Micro Hei" :height 10) nil 'append)
+#+END_SRC
+
 * Flycheck
 #+BEGIN_SRC emacs-lisp
   ;; (global-flycheck-mode)
@@ -212,6 +227,10 @@ TODO:
   (setq preview-auto-cache-preamble t)
 
   ;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
+
+  ;; TEX ENGINE:
+  ;; (setq-default TeX-engine 'xetex)
+  (setq-default TeX-engine 'default)
 #+END_SRC
 
 ** BEAMER
@@ -282,92 +301,9 @@ TODO:
 
   (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
 
-  ;;; EXTRA FROM INTERNET
-  ;; Open pdfs with evince
-  (setq org-file-apps
-      '(("\\.mm\\'" . default)
-	("\\.x?html?\\'" . default)
-	("\\.pdf\\'" . "evince %s")
-	(auto-mode . emacs)))
-
-  (set 'org-startup-truncated nil)
-
-
-      (require 'org-latex)
-      (setq org-export-latex-listings t) 
-      ;; Originally taken from Bruno Tavernier: \ http://thread.gmane.org/gmane.emacs.orgmode/31150/focus=31432
-      ;; but adapted to use latexmk 4.20 or higher.  
-      (defun my-auto-tex-cmd ()
-	"When exporting from .org with latex, automatically run latex,
-	 pdflatex, or xelatex as appropriate, using latexmk."
-	(let ((texcmd)))
-	;; default command: oldstyle latex via dvi
-	(setq texcmd "latexmk -dvi -pdfps %f")        
-	;; pdflatex -> .pdf
-	(if (string-match "LATEX_CMD: pdflatex" (buffer-string))
-	    (setq texcmd "latexmk -pdf %f"))
-	;; xelatex -> .pdf
-	(if (string-match "LATEX_CMD: xelatex" (buffer-string))
-	    (setq texcmd "latexmk -pdflatex=xelatex -pdf %f"))
-	;; LaTeX compilation command
-	(setq org-latex-to-pdf-process (list texcmd)))
-	(add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-cmd)
-	;; Default packages included in every tex file, pdflatex or xelatex
-	(setq org-export-latex-packages-alist
-	'(("" "graphicx" t)
-	("" "longtable" nil)
-	("" "float" nil)))
-      
-	(defun my-auto-tex-parameters ()
-	"Automatically select the tex packages to include."
-	;; default packages for ordinary latex or pdflatex export
-	(setq org-export-latex-default-packages-alist
-	'(("AUTO" "inputenc" t)
-	("T1"   "fontenc"   t)
-	(""     "fixltx2e"  nil)
-	(""     "wrapfig"   nil)
-	(""     "soul"      t)
-	(""     "textcomp"  t)
-	(""     "marvosym"  t)
-	(""     "wasysym"   t)
-	(""     "latexsym"  t)
-	(""     "amssymb"   t)
-	(""     "hyperref"  nil)))
-      
-	  ;; Packages to include when xelatex is used
-	  ;; (see https://github.com/kjhealy/latex-custom-kjh for the 
-	  ;; non-standard ones.)
-	  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-	      (setq org-export-latex-default-packages-alist
-		    '(("" "fontspec" t)
-		      ("" "xunicode" t)
-		      ("" "url" t)
-		      ("" "rotating" t)
-		      ("" "memoir-article-styles" t)
-		      ("american" "babel" t)
-		      ("babel" "csquotes" t)
-		      ("" "listings" nil)
-		      ("" "listings-sweave-xelatex" nil)
-		      ("svgnames" "xcolor" t)
-		      ("" "soul" t)
-		      ("xetex, colorlinks=true, urlcolor=FireBrick, plainpages=false, pdfpagelabels, bookmarksnumbered" "hyperref" nil)
-		      )))
-        
-	  (if (string-match "LATEX_CMD: xelatex" (buffer-string))
-	  (setq org-export-latex-classes
-	  (cons '("article"
-	  "\\documentclass[11pt,article,oneside]{memoir}
-	  \\input{vc}
-	  \\usepackage[style=authoryear-comp-ajs, abbreviate=true]{biblatex}
-	  \\bibliography{socbib}"
-	  ("\\section{%s}" . "\\section*{%s}")
-	  ("\\subsection{%s}" . "\\subsection*{%s}")
-	  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-	  ("\\paragraph{%s}" . "\\paragraph*{%s}")
-	  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-	  org-export-latex-classes))))  
-        
-	  (add-hook 'org-export-latex-after-initial-vars-hook 'my-auto-tex-parameters)
+  (setq org-latex-to-pdf-process 
+	'("xelatex -interaction nonstopmode %f"
+	  "xelatex -interaction nonstopmode %f"))
 #+END_SRC
 
 * C/C++ coding
@@ -526,4 +462,46 @@ TODO:
   (setq rtags-completions-enabled t)
 
   (push 'company-rtags company-backends)
+#+END_SRC
+
+* Pretty symbol modes
+#+BEGIN_SRC emacs-lisp
+  (defun pretty-symbols-preview-latex ()
+    "make some word or string show as pretty Unicode symbols"
+    (setq prettify-symbols-alist
+	  (append 
+	   '(("lambda" . 955) ; λ
+	     ("->" . 8594) ; →
+	     ("=>" . 8658) ; ⇒
+	     ("<=>" . 8660) ; ⇔
+	     ("\\circ" . 9702) ; ◦
+	     ("|[" . 10214) ; ⟦
+	     ("|]" . 10215) ; ⟧
+	     ("\\[" . 9128) ; ⎨
+	     ("\\]" . 9132) ; ⎬
+	     ("\\(" . "(")
+	     ("\\)" . ")")
+	     ("\\land" . 8743) ; ∧
+	     ("\\lor" . 8744) ; ∨
+	     ("\\subset" . 8834) ; ⊂
+	     ("\\subseteq" . 8838) ; ⊆
+	     ("\\mathbb{N}" . 8469) ; ℕ
+	     ("\\mathbb{R}" . 8477) ; ℝ
+	     ("\\qquad" . 12061) ; ⼝
+	     ("\\dots" . 8230) ; …
+	     ("\\bigsqcap" . 8851) ; ⊓
+	     ("\\bigsqcup" . 8852) ; ⊔
+	     )
+	   prettify-symbols-alist ;; tex--prettify-symbols-alist
+	   )))
+
+  ;;AUCTeX
+  (add-hook 'tex-mode-hook 'pretty-symbols-preview-latex)
+  (add-hook 'latex-mode-hook 'pretty-symbols-preview-latex)
+  (add-hook 'LaTeX-mode-hook 'pretty-symbols-preview-latex)
+
+  ;; Uncomment to unfold definitions when hovered:
+  ; (setq prettify-symbols-unprettify-at-point t)
+
+  (global-prettify-symbols-mode 1)
 #+END_SRC
