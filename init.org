@@ -176,11 +176,13 @@ TODO:
   (set-language-environment "UTF-8")
   (set-default-coding-systems 'utf-8-unix)
 
-  ;; ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
-  ;; specify font for '⦅' and '⦆'
+  ;; Font test: ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
+
+  (set-face-attribute 'default nil :family "Noto Mono")
+
   (set-fontset-font t 'unicode (font-spec :family "Noto Mono" :height 100) nil 'append)
-  (set-fontset-font t '(#x2985 . #x2986) (font-spec :family "DejaVu Sans Mono" :height 10) nil 'append)
-  (set-fontset-font t '(#x4e00 . #x9fff) (font-spec :family "WenQuanYi Micro Hei" :height 10) nil 'append)
+
+  ;; DejaVu Sans Mono ; Noto Mono ; Roboto Mono
 #+END_SRC
 
 * Flycheck
@@ -231,6 +233,13 @@ TODO:
   ;; TEX ENGINE:
   ;; (setq-default TeX-engine 'xetex)
   (setq-default TeX-engine 'default)
+
+
+  ;; Latex math font:
+  (custom-set-faces
+   '(font-latex-math-face ((t (:family "ETA Mono" :foreground "dark khaki")))))
+
+  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono
 #+END_SRC
 
 ** BEAMER
