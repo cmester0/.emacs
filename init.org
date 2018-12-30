@@ -237,9 +237,14 @@ TODO:
 
   ;; Latex math font:
   (custom-set-faces
-   '(font-latex-math-face ((t (:family "Source Code Pro" :weight semi-bold :foreground "dark khaki" :inherit)))))
+   '(font-latex-math-face ((t (:family "FreeMono" :height 140 :weight bold :foreground "dark khaki")))))
 
-  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro
+  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
+  ;; Best fonts: fixed, TeX Gyre DejaVu Math, Ubuntu Mono, Latin Modern Mono, Go Mono, Noto Sans Mono, Mitra Mono, Liberation Mono
+  ;; My Choice: TeX Gyre DejaVu Math
+
+  ;; To see all fonts, uncomment and press C-j the following line:
+  ;; (font-family-list)
 #+END_SRC
 
 ** BEAMER
