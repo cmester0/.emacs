@@ -237,9 +237,9 @@ TODO:
 
   ;; Latex math font:
   (custom-set-faces
-   '(font-latex-math-face ((t (:family "ETA Mono" :foreground "dark khaki")))))
+   '(font-latex-math-face ((t (:family "Source Code Pro" :weight semi-bold :foreground "dark khaki" :inherit)))))
 
-  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono
+  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro
 #+END_SRC
 
 ** BEAMER
