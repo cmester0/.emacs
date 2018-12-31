@@ -231,13 +231,13 @@ TODO:
   ;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
 
   ;; TEX ENGINE:
-  ;; (setq-default TeX-engine 'xetex)
-  (setq-default TeX-engine 'default)
+  (setq-default TeX-engine 'xetex)
+  ;; (setq-default TeX-engine 'default)
 
 
   ;; Latex math font:
   (custom-set-faces
-   '(font-latex-math-face ((t (:family "FreeMono" :height 140 :weight bold :foreground "dark khaki")))))
+   '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
 
   ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
   ;; Best fonts: fixed, TeX Gyre DejaVu Math, Ubuntu Mono, Latin Modern Mono, Go Mono, Noto Sans Mono, Mitra Mono, Liberation Mono
@@ -426,6 +426,11 @@ TODO:
 ** Magit
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
+
+  (setq magit-bury-buffer-function
+	(lambda (con)
+	  (kill-buffer)
+	  (delete-window)))
 #+END_SRC
 
 * Custom modes
@@ -480,6 +485,10 @@ TODO:
 
 * Pretty symbol modes
 #+BEGIN_SRC emacs-lisp
+  (setq read-quoted-char-radix 10) 
+  ;; C-q use decimal codes (quoted-insert)
+
+
   (defun pretty-symbols-preview-latex ()
     "make some word or string show as pretty Unicode symbols"
     (setq prettify-symbols-alist
@@ -499,15 +508,45 @@ TODO:
 	     ("\\lor" . 8744) ; ∨
 	     ("\\subset" . 8834) ; ⊂
 	     ("\\subseteq" . 8838) ; ⊆
+	     ("\\mathbb{A}" . 120120) ; 𝔸
+	     ("\\mathbb{B}" . 120121) ; 𝔹
+	     ("\\mathbb{C}" . 8450) ; ℂ
+	     ("\\mathbb{D}" . 120123) ; 𝔻
+	     ("\\mathbb{E}" . 120124) ; 𝔼
+	     ("\\mathbb{F}" . 120125) ; 𝔽
+	     ("\\mathbb{G}" . 120126) ; 𝔾
+	     ("\\mathbb{H}" . 8461) ; ℍ
+	     ("\\mathbb{I}" . 120128) ; 𝕀
+	     ("\\mathbb{J}" . 120129) ; 𝕁
+	     ("\\mathbb{K}" . 120130) ; 𝕂
+	     ("\\mathbb{L}" . 120131) ; 𝕃
+	     ("\\mathbb{M}" . 120132) ; 𝕄
 	     ("\\mathbb{N}" . 8469) ; ℕ
+	     ("\\mathbb{O}" . 120134) ; 𝕆
+	     ("\\mathbb{O}" . 8473) ; ℙ
+	     ("\\mathbb{Q}" . 8474) ; ℚ
 	     ("\\mathbb{R}" . 8477) ; ℝ
+	     ("\\mathbb{S}" . 120138) ; 𝕊
+	     ("\\mathbb{T}" . 120139) ; 𝕋
+	     ("\\mathbb{U}" . 120140) ; 𝕌
+	     ("\\mathbb{V}" . 120141) ; 𝕍
+	     ("\\mathbb{W}" . 120142) ; 𝕎
+	     ("\\mathbb{X}" . 120143) ; 𝕏
+	     ("\\mathbb{Y}" . 120144) ; 𝕐
+	     ("\\mathbb{Z}" . 8484) ; ℤ
+	     ("\\mathcal{O}" . 119978) ;𝒪 
+	     ("\\ell" . 120079) ; 𝔏
 	     ("\\qquad" . 12061) ; ⼝
 	     ("\\dots" . 8230) ; …
-	     ("\\bigsqcap" . 8851) ; ⊓
-	     ("\\bigsqcup" . 8852) ; ⊔
+	     ("\\cdots" . 8943) ; ⋯
+	     ("\\bigsqcap" . 10757) ; ⨅
+	     ("\\bigsqcup" . 10758) ; ⨆
 	     )
 	   prettify-symbols-alist ;; tex--prettify-symbols-alist
 	   )))
+
+
+  (setq inhibit-compacting-font-caches t)
 
   ;;AUCTeX
   (add-hook 'tex-mode-hook 'pretty-symbols-preview-latex)
@@ -515,7 +554,7 @@ TODO:
   (add-hook 'LaTeX-mode-hook 'pretty-symbols-preview-latex)
 
   ;; Uncomment to unfold definitions when hovered:
-  ; (setq prettify-symbols-unprettify-at-point t)
+					  ; (setq prettify-symbols-unprettify-at-point t)
 
   (global-prettify-symbols-mode 1)
 #+END_SRC
