@@ -62,7 +62,8 @@ TODO:
      company-coq
      company-rtags
      scala-mode
-     haskell-mode))
+     haskell-mode
+     proof-general))
 #+END_SRC
 
 * Looks
@@ -213,7 +214,7 @@ TODO:
   ;; (setq TeX-parse-self t)
   ;; (setq-default TeX-master nil)
 
-  ;; (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
   ;; (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
   ;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
@@ -239,12 +240,16 @@ TODO:
   (custom-set-faces
    '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
 
+  ;; Latin Modern Math, Computer Modern
   ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
   ;; Best fonts: fixed, TeX Gyre DejaVu Math, Ubuntu Mono, Latin Modern Mono, Go Mono, Noto Sans Mono, Mitra Mono, Liberation Mono
-  ;; My Choice: TeX Gyre DejaVu Math
+  ;; My Choice: TeX Gyre DejaVu Math, FreeMono
 
   ;; To see all fonts, uncomment and press C-j the following line:
   ;; (font-family-list)
+
+  ;; Start in math mode
+  (add-hook 'LaTeX-mode-hook 'latex-math-mode)
 #+END_SRC
 
 ** BEAMER
@@ -455,32 +460,21 @@ TODO:
 
 * Coq
 #+BEGIN_SRC emacs-lisp
-  (setq coq-prog-name "/home/lasse/opam-coq.8.8.2/system/bin/coqtop")
-  
+  ;(setq coq-prog-name "/home/lasse/opam-coq.8.6.1/4.04.0/bin/coqtop")
+  (setq coq-prog-name "/home/lasse/opam-coq.8.9.0/default/bin/coqtop")
+
   ;; Load company-coq when opening Coq files
   (add-hook 'coq-mode-hook #'company-coq-mode)
+#+END_SRC
+
+* EasyCrypt
+#+BEGIN_SRC emacs-lisp
+  ;; (load-file "/home/lasse/opam-coq.8.9.0/default/share/proofgeneral/generic/proof-site.el")
 #+END_SRC
   
 * Display Batery Mode
 #+BEGIN_SRC emacs-lisp
   (display-battery-mode 1)
-#+END_SRC
-
-* RTags
-#+BEGIN_SRC emacs-lisp
-  (load-file "~/.emacs.d/elpa/rtags-20180925.641/rtags.el")
-  (rtags-start-process-unless-running)
-
-  (require 'rtags)
-
-  (add-hook 'c-mode-hook 'rtags-start-process-unless-running)
-  (add-hook 'c++-mode-hook 'rtags-start-process-unless-running)
-  (add-hook 'objc-mode-hook 'rtags-start-process-unless-running)
-
-  (setq rtags-autostart-diagnostics t)
-  (setq rtags-completions-enabled t)
-
-  (push 'company-rtags company-backends)
 #+END_SRC
 
 * Pretty symbol modes
@@ -494,7 +488,9 @@ TODO:
     (setq prettify-symbols-alist
 	  (append 
 	   '(("lambda" . 955) ; λ
+	     ("<-" . 8592) ; ←
 	     ("->" . 8594) ; →
+	     ("<->" . 8596) ; ↔
 	     ("=>" . 8658) ; ⇒
 	     ("<=>" . 8660) ; ⇔
 	     ("\\circ" . 9702) ; ◦
@@ -523,7 +519,7 @@ TODO:
 	     ("\\mathbb{M}" . 120132) ; 𝕄
 	     ("\\mathbb{N}" . 8469) ; ℕ
 	     ("\\mathbb{O}" . 120134) ; 𝕆
-	     ("\\mathbb{O}" . 8473) ; ℙ
+	     ("\\mathbb{P}" . 8473) ; ℙ
 	     ("\\mathbb{Q}" . 8474) ; ℚ
 	     ("\\mathbb{R}" . 8477) ; ℝ
 	     ("\\mathbb{S}" . 120138) ; 𝕊
@@ -534,13 +530,45 @@ TODO:
 	     ("\\mathbb{X}" . 120143) ; 𝕏
 	     ("\\mathbb{Y}" . 120144) ; 𝕐
 	     ("\\mathbb{Z}" . 8484) ; ℤ
-	     ("\\mathcal{O}" . 119978) ;𝒪 
-	     ("\\ell" . 120079) ; 𝔏
+	     ("\\mathcal{A}" . 119964) ; 𝒜
+	     ("\\mathcal{B}" . 8492) ; ℬ
+	     ("\\mathcal{C}" . 119966) ; 𝒞 
+	     ("\\mathcal{D}" . 119967) ; 𝒟 
+	     ("\\mathcal{E}" . 8496) ; ℰ
+	     ("\\mathcal{F}" . 8497) ; ℱ
+	     ("\\mathcal{G}" . 119970) ; 𝒢 
+	     ("\\mathcal{H}" . 8459) ; ℋ
+	     ("\\mathcal{I}" . 8464) ; ℐ
+	     ("\\mathcal{J}" . 119973) ; 𝒥 
+	     ("\\mathcal{K}" . 119974) ; 𝒦 
+	     ("\\mathcal{L}" . 8466) ; ℒ
+	     ("\\mathcal{M}" . 8499) ; ℳ
+	     ("\\mathcal{N}" . 119977) ; 𝒩 
+	     ("\\mathcal{O}" . 119978) ; 𝒪 
+	     ("\\mathcal{P}" . 119979) ; 𝒫 
+	     ("\\mathcal{Q}" . 119980) ; 𝒬 
+	     ("\\mathcal{R}" . 8475) ; ℛ
+	     ("\\mathcal{S}" . 119982) ; 𝒮 
+	     ("\\mathcal{T}" . 119983) ; 𝒯 
+	     ("\\mathcal{U}" . 119984) ; 𝒰 
+	     ("\\mathcal{V}" . 119985) ; 𝒱 
+	     ("\\mathcal{W}" . 119986) ; 𝒲 
+	     ("\\mathcal{X}" . 119987) ; 𝒳 
+	     ("\\mathcal{Y}" . 119988) ; 𝒴 
+	     ("\\mathcal{Z}" . 119989) ; 𝒵
+	     ("\\ell" . 8467) ; ℓ
 	     ("\\qquad" . 12061) ; ⼝
 	     ("\\dots" . 8230) ; …
 	     ("\\cdots" . 8943) ; ⋯
 	     ("\\bigsqcap" . 10757) ; ⨅
 	     ("\\bigsqcup" . 10758) ; ⨆
+	     ("\\rightsquigarrow" . 8669) ; ⇝
+	     ("|-" . 8866) ; ⊢
+	     ("\\not\\equiv" . 8802) ; ≢
+	     ("\\llbracket" . 10214) ; ⟦ 
+	     ("\\rrbracket" . 10215) ; ⟧ 
+	     ("\\\\[" . "[") ;
+	     ("\\set{" . "{") ;
 	     )
 	   prettify-symbols-alist ;; tex--prettify-symbols-alist
 	   )))
@@ -557,4 +585,22 @@ TODO:
 					  ; (setq prettify-symbols-unprettify-at-point t)
 
   (global-prettify-symbols-mode 1)
+#+END_SRC
+
+#+RESULTS:
+: t
+
+* Paranthesis matching
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "M-)") (quote check-parens))
+#+END_SRC
+* Printer setup
+You are going to install following packages.
+   hl1210wlpr-3.0.1-1.i386.deb
+   hl1210wcupswrapper-3.0.1-1.i386.deb
+Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
+* Agda
+#+BEGIN_SRC emacs-lisp
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
 #+END_SRC
