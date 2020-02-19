@@ -171,6 +171,32 @@ TODO:
 			
 #+END_SRC
 
+*** Agda mode
+#+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(agda2-highlight-keyword-face ((t (:foreground "magenta"))))
+   '(agda2-highlight-catchall-clause-face ((t (:foreground "dark olive green"))))
+   '(agda2-highlight-unsolved-meta-face ((t (:background "dark goldenrod"))))
+   '(agda2-highlight-unsolved-constraint-face ((t (:background "dark olive green"))))
+   '(agda2-highlight-typechecks-face ((t (:background "dark olive green"))))
+   '(agda2-highlight-catchal-clause-face ((t (:background "dark red"))))
+   '(agda2-highlight-coverage-problem-face ((t (:background "dark red"))))
+   '(agda2-highlight-bound-variable-face ((t (:foreground "green"))))
+   '(agda2-highlight-datatype-face ((t (:foreground "blue"))))
+   '(agda2-highlight-function-face ((t (:foreground "cyan"))))
+   '(agda2-highlight-inductive-constructor-face ((t (:foreground "Orange"))))
+   '(agda2-highlight-module-face ((t (:foreground "controlLightHighlightColor"))))
+   '(agda2-highlight-number-face ((t (:foreground "Orange"))))
+   '(agda2-highlight-operator-face ((t (:foreground "Green"))))
+   '(agda2-highlight-postulate-face ((t (:foreground "Orange"))))
+   '(agda2-highlight-primitive-face ((t (:foreground "Orange"))))
+   '(agda2-highlight-primitive-type-face ((t (:foreground "cyan"))))
+   '(agda2-highlight-record-face ((t (:foreground "keyboardFocusIndicatorColor"))))
+   '(agda2-highlight-string-face ((t (:foreground "green"))))
+   '(agda2-highlight-termination-problem-face ((t (:background "Red4"))))
+   '(agda2-highlight-field-face ((t (:foreground "magenta")))))
+#+END_SRC
+
 ** Font
 #+BEGIN_SRC emacs-lisp
   (prefer-coding-system 'utf-8)
@@ -601,6 +627,9 @@ You are going to install following packages.
 Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
 * Agda
 #+BEGIN_SRC emacs-lisp
-(load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
+  (load-file (let ((coding-system-for-read 'utf-8))
+		  (shell-command-to-string "agda-mode locate")))
+
+  ;; (load-file (let ((coding-system-for-read 'utf-8))
+  ;; 		(shell-command-to-string "agda-mode-later locate")))
 #+END_SRC
