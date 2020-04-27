@@ -177,7 +177,7 @@ TODO:
    '(agda2-highlight-keyword-face ((t (:foreground "magenta"))))
    '(agda2-highlight-catchall-clause-face ((t (:foreground "dark olive green"))))
    '(agda2-highlight-unsolved-meta-face ((t (:background "dark goldenrod"))))
-   '(agda2-highlight-unsolved-constraint-face ((t (:background "dark olive green"))))
+   '(agda2-highlight-unsolved-constraint-face ((t (:background "olive green"))))
    '(agda2-highlight-typechecks-face ((t (:background "dark olive green"))))
    '(agda2-highlight-catchal-clause-face ((t (:background "dark red"))))
    '(agda2-highlight-coverage-problem-face ((t (:background "dark red"))))
