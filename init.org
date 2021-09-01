@@ -258,8 +258,8 @@ TODO:
   ;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
 
   ;; TEX ENGINE:
-  (setq-default TeX-engine 'xetex)
-  ;; (setq-default TeX-engine 'default)
+  ;; (setq-default TeX-engine 'xetex)
+  (setq-default TeX-engine 'default)
 
 
   ;; Latex math font:
@@ -419,10 +419,11 @@ TODO:
   (require 'ede)
   (global-ede-mode)
 
-  (ede-cpp-root-project "In the Land of Ling"
-			:file "~/Dropbox/In the land of Ling/Small project/Code/Makefile"
+  (ede-cpp-root-project "In the Land of Ling - Collision"
+			:file "~/Documents/ILL/LandOfLing/Makefile"
 			:include-path '()
-			:system-include-path '("~/linux"))
+			:system-include-path '("~/linux")
+			:compile-command "make")
 #+END_SRC
 
 ** Parenthesis matching
@@ -629,7 +630,4 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
 #+BEGIN_SRC emacs-lisp
   (load-file (let ((coding-system-for-read 'utf-8))
 		  (shell-command-to-string "agda-mode locate")))
-
-  ;; (load-file (let ((coding-system-for-read 'utf-8))
-  ;; 		(shell-command-to-string "agda-mode-later locate")))
 #+END_SRC
