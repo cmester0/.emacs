@@ -1,7 +1,13 @@
 * What to write in the .emacs file:
 #+BEGIN_SRC emacs-lisp :tangle no
   (require 'org)
-  (org-babel-load-file (expand-file-name "~/Dropbox/.emacs.d/init.org"))
+  (org-babel-load-file (expand-file-name "~/Documents/.emacs/init.org"))
+
+  (require 'package)
+  (add-to-list 'package-archieves '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+
+  (add-to-list 'package-archieves '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 * Better start
@@ -19,8 +25,41 @@
 
   (line-number-mode 1)   ;; Show line number
   (column-number-mode 1) ;; Show column number
+
+  (setq debug-on-error 1) ;; Show backtrace on emacs lisp error
 #+END_SRC
 
+* Looks
+** Theme
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wheatgrass)
+  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
+
+  ;; (custom-set-faces
+  ;;  '(default ((t (:foreground "white"))))
+  ;;  '(bold ((t (:weight bold))))
+  ;;  '(italic ((t (:slant italic))))
+  ;;  '(bold-italic ((t (:weight bold :slant italic))))
+  ;;  '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
+  ;;  '(fixed-pitch ((t (:family "Monospace"))))
+  ;;  '(variable-pitch ((t (:family "Sans Serif"))))
+  ;;  '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
+  ;;  '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
+  ;;  '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
+  ;;  '(highlight ((t (:foreground "white" :background "dark green"))))
+  ;;  '(match ((t (:background "RoyalBlue3"))))
+  ;;  '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
+  ;;  '(lazy-highlight ((t (:background "gray25"))))
+  ;;  )
+
+
+  ;; (custom-set-faces
+  ;; '(mode-line ((t (:background "grey75" :foreground "black"))))
+  ;;  '(mode-line-buffer-id ((t (:weight bold))))
+  ;;  '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
+  ;;  '(mode-line-emphasis ((t (:weight bold))))
+  ;;  '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
+#+END_SRC
 * List of used packages
  - AUCTEX (for LaTeX)
  - SML-mode
@@ -38,11 +77,33 @@
    - company-rtags
  - Scala mode
  - Haskell-mode
+ - Lsp mode
+ - Org mode, htmlize (for color)
 
 TODO:
  - Flyspell
 
+* List of used ubuntu
+#+BEGIN_SRC bash :tangle no
+  sudo apt install texlive-full
+  sudo apt install opam
+  opam install coq
+
+  gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
+#+END_SRC
+
+* Keyboard setup (QMK)
+#+BEGIN_SRC bash :tangle no
+  git clone git@github.com:cmester0/keyboard_setup.git
+#+END_SRC
+
 * Install missing packages
+#+BEGIN_SRC emacs-lisp
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (mapcar
    (lambda (package)
@@ -51,9 +112,9 @@ TODO:
    '(auctex
      sml-mode
      magit
-     multiple-cursors
+     ;; multiple-cursors
      rainbow-delimiters
-     tuareg
+     ;; tuareg
      flycheck
      flycheck-color-mode-line
      powerline
@@ -66,56 +127,46 @@ TODO:
      proof-general))
 #+END_SRC
 
-* Looks
-** Theme
+* Fonts
+You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And `C-u C-x =` to check data under cursor. Or even: `customize-face`.
+
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
-  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
+  (prefer-coding-system 'utf-8)
+  (set-language-environment "UTF-8")
+  (set-default-coding-systems 'utf-8-unix)
+
+  ;; Font test: ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
+
+  (set-face-attribute 'default nil :family "Noto Mono")
+  ;; (set-frame-font "Noto Mono 13" nil t)
+
+  ;; (set-fontset-font t 'unicode (font-spec :family "Noto Mono" :height 100) nil 'append)
+
+  ;; DejaVu Sans Mono ; Noto Mono ; Roboto Mono
 
   (custom-set-faces
-   '(default ((t (:foreground "white"))))
-   '(bold ((t (:weight bold))))
-   '(italic ((t (:slant italic))))
-   '(bold-italic ((t (:weight bold :slant italic))))
-   '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
-   '(fixed-pitch ((t (:family "Monospace"))))
-   '(variable-pitch ((t (:family "Sans Serif"))))
-   '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
-   '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
-   '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
-   '(highlight ((t (:foreground "white" :background "dark green"))))
-   '(match ((t (:background "RoyalBlue3"))))
-   '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
-   '(lazy-highlight ((t (:background "gray25"))))
-   )
+   '(default ((t :foreground "white"))))
 
-
-  (custom-set-faces
-  '(mode-line ((t (:background "grey75" :foreground "black"))))
-   '(mode-line-buffer-id ((t (:weight bold))))
-   '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
-   '(mode-line-emphasis ((t (:weight bold))))
-   '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
 #+END_SRC
 
 ** Font-lock-*
 #+BEGIN_SRC emacs-lisp
   (custom-set-faces
    '(font-lock-builtin-face ((t :foreground "LightSteelBlue")))
-   '(font-lock-comment-delimiter-face ((t :inherit 'font-lock-comment-face)))
+   '(font-lock-comment-delimiter-face ((t :foreground "gray50"))) ;; :inherit 'font-lock-comment-face
    '(font-lock-comment-face ((t :foreground "gray50"))) ;; gray50
    '(font-lock-constant-face ((t :foreground "sky blue"))) ;; turquoise
-   '(font-lock-doc-face ((t :inherit 'font-lock-string-face)))
+   '(font-lock-doc-face ((t :foreground "light orange"))) ;; :inherit 'font-lock-string-face
    '(font-lock-function-name-face ((t :foreground "cyan"))) ;; pale green
    '(font-lock-keyword-face ((t :foreground "gray70"))) ;; white
    '(font-lock-negation-char-face)
-   '(font-lock-preprocessor-face ((t :inherit 'font-lock-builtin-face)))
+   '(font-lock-preprocessor-face ((t :foreground "royal blue"))) ;; :inherit 'font-lock-builtin-face
    '(font-lock-regexp-grouping-backslash ((t :inherit 'bold)))
    '(font-lock-regexp-grouping-construct ((t :inherit 'bold)))
    '(font-lock-string-face ((t :foreground "dark khaki")))
    '(font-lock-type-face ((t :foreground "green"))) ;; aquamarine
-   '(font-lock-variable-name-face ((t :foreground "yellow green"))) ;; 
-   '(font-lock-warning-face ((t :inherit 'error))))
+   '(font-lock-variable-name-face ((t :foreground "yellow green"))) ;;
+   '(font-lock-warning-face ((t :foreground "salmon1")))) ;; :inherit (t (:inherit 'error))
 #+END_SRC
 
 ** Rainbow delimiters
@@ -137,17 +188,27 @@ TODO:
 
 ** Powerline
 #+BEGIN_SRC emacs-lisp
-  (require 'powerline)
-  (powerline-default-theme)
+  ;; (require 'powerline)
+  ;; (powerline-default-theme)
 
-  (custom-set-faces
-   '(powerline-active0 ((t (:inherit nil :foreground "white" :background "purple3"))))
-   '(powerline-active1 ((t (:inherit nil :foreground "black" :background "yellow3"))))
-   '(powerline-active2 ((t (:inherit nil :foreground "white" :background "DeepPink3" :distant-foreground "green"))))
-   '(powerline-inactive0 ((t (:inherit nil :foreground "gray60" :background "purple4"))))
-   '(powerline-inactive1 ((t (:inherit nil :foreground "gray30" :background "yellow4"))))
-   '(powerline-inactive2 ((t (:inherit nil :foreground "gray50" :background "DeepPink4")))))
+  ;; (custom-set-faces
+  ;;  '(powerline-active0 ((t (:inherit nil :foreground "white" :background "purple3"))))
+  ;;  '(powerline-active1 ((t (:inherit nil :foreground "black" :background "yellow3"))))
+  ;;  '(powerline-active2 ((t (:inherit nil :foreground "white" :background "DeepPink3" :distant-foreground "green"))))
+  ;;  '(powerline-inactive0 ((t (:inherit nil :foreground "gray60" :background "purple4"))))
+  ;;  '(powerline-inactive1 ((t (:inherit nil :foreground "gray30" :background "yellow4"))))
+  ;;  '(powerline-inactive2 ((t (:inherit nil :foreground "gray50" :background "DeepPink4")))))
 #+END_SRC
+
+** Smart mode line
+#+begin_src emacs-lisp
+  (setq sml/no-confirm-load-theme t)
+
+  (sml/setup)
+  ;; (setq sml/theme 'dark)
+  (setq sml/theme 'light)
+  ;; (setq sml/theme 'respectful)
+#+end_src
 
 ** Modes
 *** Org mode
@@ -162,13 +223,12 @@ TODO:
    '(org-level-6 ((t (:foreground "cyan1"))))
    '(org-level-7 ((t (:foreground "blue1"))))
    '(org-level-8 ((t (:foreground "magenta1"))))
-   '(org-block ((t (:inherit 'shadow))))
+   '(org-block ((t (:foreground "gray70" :background "gray10")))) ; ((t (:inherit 'shadow))) (gray70)
    '(org-default ((t (:inherit 'default))))
-   '(org-block-begin-line ((t (:inherit 'org-meta-line))))
-   '(org-block-end-line ((t (:inherit 'org-meta-line))))
-   '(org-meta-line ((t (:inherit 'font-lock-comment-face)))))
-   
-			
+   '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+   '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+   '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
+   )
 #+END_SRC
 
 *** Agda mode
@@ -197,19 +257,98 @@ TODO:
    '(agda2-highlight-field-face ((t (:foreground "magenta")))))
 #+END_SRC
 
-** Font
+*** Coq / proof general
+#+begin_src emacs-lisp
+  (custom-set-faces
+   ;; '(proof-active-area-face ((t (:foreground "magenta"))))
+   ;; '(proof-boring-face ((t (:foreground "magenta"))))
+   ;; '(proof-command-mouse-highlight-face ((t (:foreground "magenta"))))
+   ;; '(proof-debug-message-face ((t (:foreground "magenta"))))
+   ;; '(proof-declaration-name-face ((t (:foreground "magenta"))))
+   ;; '(proof-eager-annotation-face ((t (:foreground "magenta"))))
+   ;; '(proof-error-face ((t (:foreground "magenta"))))
+   ;; '(proof-highlight-dependency-face ((t (:foreground "magenta"))))
+   ;; '(proof-highlight-dependent-face ((t (:foreground "magenta"))))
+   ;; '(proof-locked-face ((t (:foreground "magenta"))))
+   ;; '(proof-mouse-highlight-face ((t (:foreground "magenta"))))
+   ;; '(proof-omitted-proof-face ((t (:foreground "magenta"))))
+   ;; '(proof-queue-face ((t (:foreground "magenta"))))
+   ;; '(proof-region-mouse-highlight-face ((t (:foreground "magenta"))))
+   ;; '(proof-script-highlight-error-face ((t (:foreground "magenta"))))
+   ;; '(proof-script-sticky-error-face ((t (:foreground "magenta"))))
+   ;; '(proof-tacticals-name-face ((t (:foreground "magenta"))))
+   ;; '(proof-tactics-name-face ((t (:foreground "magenta"))))
+   ;; '(proof-warning-face ((t (:foreground "magenta"))))
+
+   ;; '(company-coq-comment-h1-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-comment-h2-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-comment-h3-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-coqdoc-h1-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-coqdoc-h2-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-coqdoc-h3-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-coqdoc-h4-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-doc-header-face-about ((t (:foreground "magenta"))))
+   ;; '(company-coq-doc-header-face-docs-and-sources ((t (:foreground "magenta"))))
+   ;; '(company-coq-doc-i-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-doc-tt-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-features/code-folding-bullet-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-features/code-folding-ellipsis-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-features/refactorings-highlight-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-features/smart-subscripts-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-goal-separator-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-inline-docs-face ((t (:foreground "magenta"))))
+   ;; '(company-coq-snippet-hole-face ((t (:foreground "magenta"))))
+
+   ;; '(coq-button-face ((t (:foreground "magenta"))))
+   ;; '(coq-button-face-active ((t (:foreground "magenta"))))
+   ;; '(coq-button-face-pressed ((t (:foreground "magenta"))))
+   ;; '(coq-cheat-face ((t (:foreground "magenta"))))
+   ;; '(coq-context-qualifier-face ((t (:foreground "magenta"))))
+   ;; '(coq-diffs-added-bg-face ((t (:foreground "magenta"))))
+   ;; '(coq-diffs-added-face ((t (:foreground "magenta"))))
+   ;; '(coq-diffs-removed-bg-face ((t (:foreground "magenta"))))
+   ;; '(coq-diffs-removed-face ((t (:foreground "magenta"))))
+   ;; '(coq-question-mark-face ((t (:foreground "magenta"))))
+   ;; '(coq-solve-tactics-face ((t (:foreground "magenta"))))
+   ;; '(coq-symbol-binder-face ((t (:foreground "magenta"))))
+   ;; '(coq-symbol-face ((t (:foreground "magenta"))))
+
+   ;; '(font-lock-builtin-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-comment-delimiter-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-comment-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-constant-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-doc-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-function-name-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-keyword-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-negation-char-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-preprocessor-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-regexp-grouping-backslash ((t (:foreground "magenta"))))
+   ;; '(font-lock-regexp-grouping-construct ((t (:foreground "magenta"))))
+   ;; '(font-lock-string-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-type-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-variable-name-face ((t (:foreground "magenta"))))
+   ;; '(font-lock-warning-face ((t (:foreground "magenta"))))
+   )
+#+end_src
+
+*** Rust
 #+BEGIN_SRC emacs-lisp
-  (prefer-coding-system 'utf-8)
-  (set-language-environment "UTF-8")
-  (set-default-coding-systems 'utf-8-unix)
-
-  ;; Font test: ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
-
-  (set-face-attribute 'default nil :family "Noto Mono")
-
-  (set-fontset-font t 'unicode (font-spec :family "Noto Mono" :height 100) nil 'append)
-
-  ;; DejaVu Sans Mono ; Noto Mono ; Roboto Mono
+  ;; Basics
+  ;; (custom-set-faces
+  ;;  '(org-level-1 ((t (:foreground "purple1"))))
+  ;;  '(org-level-2 ((t (:foreground "red1"))))
+  ;;  '(org-level-3 ((t (:foreground "orange1"))))
+  ;;  '(org-level-4 ((t (:foreground "yellow1"))))
+  ;;  '(org-level-5 ((t (:foreground "green1"))))
+  ;;  '(org-level-6 ((t (:foreground "cyan1"))))
+  ;;  '(org-level-7 ((t (:foreground "blue1"))))
+  ;;  '(org-level-8 ((t (:foreground "magenta1"))))
+  ;;  '(org-block ((t (:foreground "gray70" :background "gray10")))) ; ((t (:inherit 'shadow))) (gray70)
+  ;;  '(org-default ((t (:inherit 'default))))
+  ;;  '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+  ;;  '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+  ;;  '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
+  ;;  )
 #+END_SRC
 
 * Flycheck
@@ -263,8 +402,8 @@ TODO:
 
 
   ;; Latex math font:
-  (custom-set-faces
-   '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
+  ;; (custom-set-faces
+  ;;  '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
 
   ;; Latin Modern Math, Computer Modern
   ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
@@ -308,11 +447,11 @@ TODO:
     commentstyle=\\color{red},
     }\n
 	\\usepackage{verbatim}\n
-	\\institute{{{{beamerinstitute}}}}\n          
+	\\institute{{{{beamerinstitute}}}}\n
 	 \\subject{{{{beamersubject}}}}\n"
 
        ("\\section{%s}" . "\\section*{%s}")
-     
+
        ("\\begin{frame}[fragile]\\frametitle{%s}"
 	 "\\end{frame}"
 	 "\\begin{frame}[fragile]\\frametitle{%s}"
@@ -327,7 +466,7 @@ TODO:
 	\\usepackage[utf8]{inputenc}\n
 	\\usepackage[T1]{fontenc}\n
 	\\usepackage{color}"
-     
+
        ("\\section{%s}" . "\\section*{%s}")
        ("\\subsection{%s}" . "\\subsection*{%s}")
        ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -337,19 +476,106 @@ TODO:
 
 * Org mode
 #+BEGIN_SRC emacs-lisp
+  (setq org-startup-folded t)
   (add-hook 'org-mode-hook 'org-hide-block-all)
+  (add-hook 'org-mode-hook (lambda () (setq-local word-wrap nil)))
+  (setq org-startup-truncated t) ;; non-nil for truncated
 
   (org-babel-do-load-languages
    'org-babel-load-languages '((latex . t)
 			       (C . t)
-			       (python .t )))
+			       (org . t)
+			       (python . t)
+			       (shell . t)
+			       ;; (coq . nil)
+			       ))
 
-  (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
+  ;; (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
 
-  (setq org-latex-to-pdf-process 
-	'("xelatex -interaction nonstopmode %f"
-	  "xelatex -interaction nonstopmode %f"))
+  (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s")) ;; xdg-open
+  (require 'ox-beamer)
+  ;; (add-to-list 'org-export-backends 'beamer)
+
+  (setq org-latex-listings 'minted)
+  (setq org-latex-packages-alist '(("" "minted")))
+  (add-to-list 'org-latex-packages-alist '("" "fullpage"))
+  (add-to-list 'org-latex-packages-alist '("" "color"))
+
+  (setq org-latex-minted-options
+	'(("linenos") ("breaklines")))
+
+  (setq org-latex-to-pdf-process
+	'("pdflatex -shell-escape -interaction nonstopmode %f"
+	  "pdflatex -shell-escape -interaction nonstopmode %f"))
+  ;; '("xelatex -interaction nonstopmode %f"
+  ;;   "xelatex -interaction nonstopmode %f")
+
+  ;; fontify code in code blocks
+  (setq org-src-fontify-natively t)
+  (setq org-src-tab-acts-natively t)
+  (setq org-src-preserve-indentation nil 
+	org-edit-src-content-indentation 0)
+
+  (setq org-confirm-babel-evaluate 'nil)
+
+  (add-to-list 'org-src-lang-modes '("toml" . "conf-toml"))
 #+END_SRC
+
+#+begin_src emacs-lisp
+  (defun org-edit-src-code (&optional code edit-buffer-name)
+    "Edit the source or example block at point.
+  \\<org-src-mode-map>
+  The code is copied to a separate buffer and the appropriate mode
+  is turned on.  When done, exit with `\\[org-edit-src-exit]'.  This \
+  will remove the
+  original code in the Org buffer, and replace it with the edited
+  version.  See `org-src-window-setup' to configure the display of
+  windows containing the Org buffer and the code buffer.
+
+  When optional argument CODE is a string, edit it in a dedicated
+  buffer instead.
+
+  When optional argument EDIT-BUFFER-NAME is non-nil, use it as the
+  name of the sub-editing buffer."
+    (interactive)
+    (let* ((element (org-element-at-point))
+	   (type (org-element-type element)))
+      (unless (and (memq type '(example-block src-block))
+		   (org-src--on-datum-p element))
+	(user-error "Not in a source or example block"))
+      (let* ((lang
+	      (if (eq type 'src-block) (org-element-property :language element)
+		"example"))
+	     (lang-f (and (eq type 'src-block) (org-src-get-lang-mode lang)))
+	     (babel-info (and (eq type 'src-block)
+			      (org-babel-get-src-block-info 'light)))
+	     (buff-name (buffer-file-name))
+	     deactivate-mark)
+	(when (and (eq type 'src-block) (not (functionp lang-f)))
+	  (error "No such language mode: %s" lang-f))
+	(org-src--edit-element
+	 element
+	 (or edit-buffer-name
+	     (org-src--construct-edit-buffer-name (buffer-name) lang))
+	 lang-f
+	 (and (null code)
+	      (lambda () (org-escape-code-in-region (point-min) (point-max))))
+	 (and code (org-unescape-code-in-string code)))
+	;; Finalize buffer.
+	(setq-local org-coderef-label-format
+		    (or (org-element-property :label-fmt element)
+			org-coderef-label-format))
+	(when (eq type 'src-block)
+	  (setq org-src--babel-info babel-info)
+	  (let ((file-name (cdr (assoc :tangle (car (cdr (cdr org-src--babel-info)))))))
+	    (if (not (string= file-name "no"))
+		(setq buffer-file-name (concat (file-name-directory buff-name) file-name))
+	      (setq buffer-file-name 'nil)))
+	  (let ((edit-prep-func (intern (concat "org-babel-edit-prep:" lang))))
+	    (when (fboundp edit-prep-func)
+	      (funcall edit-prep-func babel-info))))
+	t)))
+#+end_src
 
 * C/C++ coding
 ** Indentation
@@ -381,7 +607,7 @@ TODO:
   ;; (setq hs-isearch-open 'x)
   ;; (global-set-key (kbd "C-+") (kbd "C-c @ C-c")) ;; Toggles hiding
 #+END_SRC
-  
+
 ** CEDET
 *** Semantic
 #+BEGIN_SRC emacs-lisp
@@ -415,17 +641,6 @@ TODO:
 #+END_SRC
 
 *** EDE
-#+BEGIN_SRC emacs-lisp
-  (require 'ede)
-  (global-ede-mode)
-
-  (ede-cpp-root-project "In the Land of Ling - Collision"
-			:file "~/Documents/ILL/LandOfLing/Makefile"
-			:include-path '()
-			:system-include-path '("~/linux")
-			:compile-command "make")
-#+END_SRC
-
 ** Parenthesis matching
 #+BEGIN_SRC emacs-lisp
   (show-paren-mode)
@@ -433,25 +648,6 @@ TODO:
   (require 'rainbow-delimiters)
   (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
   ;; (global-rainbow-delimiters-mode)
-#+END_SRC
-
-** Multiple Cursors
-#+BEGIN_SRC emacs-lisp
-  (require 'multiple-cursors)
-
-  (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-
-  (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-  (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-  (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-#+END_SRC
-
-* Company
-#+BEGIN_SRC emacs-lisp
-  (require 'company)
-  (add-hook 'after-init-hook 'global-company-mode)
-  ;; (define-key c-mode-map  [(tab)] 'company-complete)
-  ;; (define-key c++-mode-map  [(tab)] 'company-complete)
 #+END_SRC
 
 * Git
@@ -464,41 +660,11 @@ TODO:
 	  (kill-buffer)
 	  (delete-window)))
 #+END_SRC
-
-* Custom modes
-** ill-mode
-#+BEGIN_SRC emacs-lisp
-  ;; (require 'ill-mode) 
-#+END_SRC
-
-
-
-
-
-#+BEGIN_SRC latex
-  \[
-    \begin{matrix}
-      a & b & c \\
-      d & e & f \\
-      g & h & i \\
-    \end{matrix}
-  \]
-#+END_SRC
-
-* Coq
-#+BEGIN_SRC emacs-lisp
-  ;(setq coq-prog-name "/home/lasse/opam-coq.8.6.1/4.04.0/bin/coqtop")
-  (setq coq-prog-name "/home/lasse/opam-coq.8.9.0/default/bin/coqtop")
-
-  ;; Load company-coq when opening Coq files
-  (add-hook 'coq-mode-hook #'company-coq-mode)
-#+END_SRC
-
 * EasyCrypt
 #+BEGIN_SRC emacs-lisp
   ;; (load-file "/home/lasse/opam-coq.8.9.0/default/share/proofgeneral/generic/proof-site.el")
 #+END_SRC
-  
+
 * Display Batery Mode
 #+BEGIN_SRC emacs-lisp
   (display-battery-mode 1)
@@ -506,14 +672,14 @@ TODO:
 
 * Pretty symbol modes
 #+BEGIN_SRC emacs-lisp
-  (setq read-quoted-char-radix 10) 
+  (setq read-quoted-char-radix 10)
   ;; C-q use decimal codes (quoted-insert)
 
 
   (defun pretty-symbols-preview-latex ()
     "make some word or string show as pretty Unicode symbols"
     (setq prettify-symbols-alist
-	  (append 
+	  (append
 	   '(("lambda" . 955) ; λ
 	     ("<-" . 8592) ; ←
 	     ("->" . 8594) ; →
@@ -559,29 +725,29 @@ TODO:
 	     ("\\mathbb{Z}" . 8484) ; ℤ
 	     ("\\mathcal{A}" . 119964) ; 𝒜
 	     ("\\mathcal{B}" . 8492) ; ℬ
-	     ("\\mathcal{C}" . 119966) ; 𝒞 
-	     ("\\mathcal{D}" . 119967) ; 𝒟 
+	     ("\\mathcal{C}" . 119966) ; 𝒞
+	     ("\\mathcal{D}" . 119967) ; 𝒟
 	     ("\\mathcal{E}" . 8496) ; ℰ
 	     ("\\mathcal{F}" . 8497) ; ℱ
-	     ("\\mathcal{G}" . 119970) ; 𝒢 
+	     ("\\mathcal{G}" . 119970) ; 𝒢
 	     ("\\mathcal{H}" . 8459) ; ℋ
 	     ("\\mathcal{I}" . 8464) ; ℐ
-	     ("\\mathcal{J}" . 119973) ; 𝒥 
-	     ("\\mathcal{K}" . 119974) ; 𝒦 
+	     ("\\mathcal{J}" . 119973) ; 𝒥
+	     ("\\mathcal{K}" . 119974) ; 𝒦
 	     ("\\mathcal{L}" . 8466) ; ℒ
 	     ("\\mathcal{M}" . 8499) ; ℳ
-	     ("\\mathcal{N}" . 119977) ; 𝒩 
-	     ("\\mathcal{O}" . 119978) ; 𝒪 
-	     ("\\mathcal{P}" . 119979) ; 𝒫 
-	     ("\\mathcal{Q}" . 119980) ; 𝒬 
+	     ("\\mathcal{N}" . 119977) ; 𝒩
+	     ("\\mathcal{O}" . 119978) ; 𝒪
+	     ("\\mathcal{P}" . 119979) ; 𝒫
+	     ("\\mathcal{Q}" . 119980) ; 𝒬
 	     ("\\mathcal{R}" . 8475) ; ℛ
-	     ("\\mathcal{S}" . 119982) ; 𝒮 
-	     ("\\mathcal{T}" . 119983) ; 𝒯 
-	     ("\\mathcal{U}" . 119984) ; 𝒰 
-	     ("\\mathcal{V}" . 119985) ; 𝒱 
-	     ("\\mathcal{W}" . 119986) ; 𝒲 
-	     ("\\mathcal{X}" . 119987) ; 𝒳 
-	     ("\\mathcal{Y}" . 119988) ; 𝒴 
+	     ("\\mathcal{S}" . 119982) ; 𝒮
+	     ("\\mathcal{T}" . 119983) ; 𝒯
+	     ("\\mathcal{U}" . 119984) ; 𝒰
+	     ("\\mathcal{V}" . 119985) ; 𝒱
+	     ("\\mathcal{W}" . 119986) ; 𝒲
+	     ("\\mathcal{X}" . 119987) ; 𝒳
+	     ("\\mathcal{Y}" . 119988) ; 𝒴
 	     ("\\mathcal{Z}" . 119989) ; 𝒵
 	     ("\\ell" . 8467) ; ℓ
 	     ("\\qquad" . 12061) ; ⼝
@@ -592,8 +758,8 @@ TODO:
 	     ("\\rightsquigarrow" . 8669) ; ⇝
 	     ("|-" . 8866) ; ⊢
 	     ("\\not\\equiv" . 8802) ; ≢
-	     ("\\llbracket" . 10214) ; ⟦ 
-	     ("\\rrbracket" . 10215) ; ⟧ 
+	     ("\\llbracket" . 10214) ; ⟦
+	     ("\\rrbracket" . 10215) ; ⟧
 	     ("\\\\[" . "[") ;
 	     ("\\set{" . "{") ;
 	     )
@@ -614,9 +780,6 @@ TODO:
   (global-prettify-symbols-mode 1)
 #+END_SRC
 
-#+RESULTS:
-: t
-
 * Paranthesis matching
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-)") (quote check-parens))
@@ -627,7 +790,509 @@ You are going to install following packages.
    hl1210wcupswrapper-3.0.1-1.i386.deb
 Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
 * Agda
+# #+BEGIN_SRC emacs-lisp
+#   (load-file (let ((coding-system-for-read 'utf-8))
+# 		  (shell-command-to-string "agda-mode locate")))
+# #+END_SRC
+* Rust
 #+BEGIN_SRC emacs-lisp
-  (load-file (let ((coding-system-for-read 'utf-8))
-		  (shell-command-to-string "agda-mode locate")))
+  (add-hook 'rust-mode-hook
+	    (lambda () (setq indent-tabs-mode nil)))
+  (add-hook 'rust-mode-hook 'yas-minor-mode)
+
+  ;; TODO: add yas-mode so rustic does not complain on auto-complete
+
+  (setq rust-format-on-save t)
 #+END_SRC
+
+* LSP
+** Rust
+#+BEGIN_SRC emacs-lisp
+  (setq lsp-rust-server 'rust-analyzer)
+#+END_SRC
+
+* Tags
+# #+BEGIN_SRC emacs-lisp
+#    (defadvice xref-find-definitions (before c-tag-file activate)
+#    "Automatically create tags file."
+#    (let ((tag-file (concat default-directory "TAGS")))
+#      (unless (file-exists-p tag-file)
+#        (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
+#      (visit-tags-table tag-file)))
+# #+END_SRC
+
+* Coq
+#+begin_src emacs-lisp
+(load "~/.emacs.d/lisp/PG/generic/proof-site")
+(setq proof-assistant "Coq")
+(load "/home/au538501/.emacs.d/elpa/proof-general-20220525.1052/coq/coq")
+
+(setq proof-splash-enable nil)
+#+end_src
+
+#+BEGIN_SRC emacs-lisp
+(exec-path-from-shell-initialize)
+
+;; (setq coq-prog-name "~/.opam/4.11.1/bin/coqtop")
+;; (setq coq-prog-name "~/.opam/4.07.1+flambda/bin/coqtop")
+;; (setq coq-prog-name "~/.opam/4.05.0/bin/coqtop")
+(setq coq-prog-name "~/.opam/default/bin/coqtop")
+;; (setq coq-prog-name "coqtop")
+
+;; Load company-coq when opening Coq files
+(add-hook 'coq-mode-hook #'company-coq-mode)
+
+#+END_SRC
+
+#+begin_src emacs-lisp :tangle no
+  ;;; inferior-coq.el --- Run an inferior Coq process.
+  ;;;
+  ;;; Copyright (C) Marco Maggesi <maggesi@math.unifi.it>
+  ;;; Time-stamp: "2002-02-28 12:15:04 maggesi"
+
+
+  ;; Emacs Lisp Archive Entry
+  ;; Filename: inferior-coq.el
+  ;; Version: 1.0
+  ;; Keywords: process coq
+  ;; Author: Marco Maggesi <maggesi@math.unifi.it>
+  ;; Maintainer: Marco Maggesi <maggesi@math.unifi.it>
+  ;; Description: Run an inferior Coq process.
+  ;; URL: http://www.math.unifi.it/~maggesi/
+  ;; Compatibility: Emacs20, Emacs21, XEmacs21
+
+  ;; This is free software; you can redistribute it and/or modify it under
+  ;; the terms of the GNU General Public License as published by the Free
+  ;; Software Foundation; either version 2, or (at your option) any later
+  ;; version.
+  ;;
+  ;; This is distributed in the hope that it will be useful, but WITHOUT
+  ;; ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ;; FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+  ;; for more details.
+  ;;
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with GNU Emacs; see the file COPYING.  If not, write to the
+  ;; Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
+  ;; MA 02111-1307, USA.
+
+  ;;; Commentary:
+
+  ;; Coq is a proof assistant (http://coq.inria.fr/).  This code run an
+  ;; inferior Coq process and defines functions to send bits of code
+  ;; from other buffers to the inferior process.  This is a
+  ;; customisation of comint-mode (see comint.el).  For a more complex
+  ;; and full featured Coq interface under Emacs look at Proof General
+  ;; (http://zermelo.dcs.ed.ac.uk/~proofgen/).
+  ;;
+  ;; Written by Marco Maggesi <maggesi@math.unifi.it> with code heavly
+  ;; borrowed from emacs cmuscheme.el
+  ;;
+  ;; Please send me bug reports, bug fixes, and extensions, so that I can
+  ;; merge them into the master source.
+
+  ;;; Installation:
+
+  ;; You need to have coq.el already installed (it comes with the
+  ;; standard Coq distribution) in order to use this code.  Put this
+  ;; file somewhere in you load-path and add the following lines in your
+  ;; "~/.emacs":
+  ;;
+  ;;   (setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
+  ;;   (autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+  ;;   (autoload 'run-coq "inferior-coq" "Run an inferior Coq process." t)
+  ;;   (autoload 'run-coq-other-window "inferior-coq"
+  ;;     "Run an inferior Coq process in a new window." t)
+  ;;   (autoload 'run-coq-other-frame "inferior-coq"
+  ;;     "Run an inferior Coq process in a new frame." t)
+
+  ;;; Usage:
+
+  ;; Call `M-x "run-coq'.
+  ;;
+  ;; Functions and key bindings (Learn more keys with `C-c C-h' or `C-h m'):
+  ;;   C-return ('M-x coq-send-line)     send the current line.
+  ;;   C-c C-r  (`M-x coq-send-region')  send the current region.
+  ;;   C-c C-a  (`M-x coq-send-abort')   send the command "Abort".
+  ;;   C-c C-t  (`M-x coq-send-restart') send the command "Restart".
+  ;;   C-c C-s  (`M-x coq-send-show')    send the command "Show".
+  ;;   C-c C-u  (`M-x coq-send-undo')    send the command "Undo".
+  ;;   C-c C-v  (`M-x coq-check-region') run command "Check" on region.
+  ;;   C-c .    (`M-x coq-come-here')    Restart and send until current point.
+
+  ;;; Change Log:
+
+  ;; From -0.0 to 1.0 brought into existence.
+
+
+  ;; ~/.emacs.d/elpa/proof-general-20211215.1823/coq/coq.el
+  (require 'coq)
+  (require 'comint)
+
+  (setq coq-program-name "coqtop")
+
+  (defgroup inferior-coq nil
+    "Run a coq process in a buffer."
+    :group 'coq)
+
+  (defcustom inferior-coq-mode-hook nil
+    "*Hook for customising inferior-coq mode."
+    :type 'hook
+    :group 'coq)
+
+  (defvar inferior-coq-mode-map
+    (let ((m (make-sparse-keymap)))
+      (define-key m "\C-c\C-r" 'coq-send-region)
+      (define-key m "\C-c\C-a" 'coq-send-abort)
+      (define-key m "\C-c\C-t" 'coq-send-restart)
+      (define-key m "\C-c\C-s" 'coq-send-show)
+      (define-key m "\C-c\C-u" 'coq-send-undo)
+      (define-key m "\C-c\C-v" 'coq-check-region)
+      m))
+
+  ;; Install the process communication commands in the coq-mode keymap.
+  (define-key coq-mode-map [(control return)] 'coq-send-line)
+  (define-key coq-mode-map "\C-c\C-r" 'coq-send-region)
+  (define-key coq-mode-map "\C-c\C-a" 'coq-send-abort)
+  (define-key coq-mode-map "\C-c\C-t" 'coq-send-restart)
+  (define-key coq-mode-map "\C-c\C-s" 'coq-send-show)
+  (define-key coq-mode-map "\C-c\C-u" 'coq-send-undo)
+  (define-key coq-mode-map "\C-c\C-v" 'coq-check-region)
+  (define-key coq-mode-map "\C-c." 'coq-come-here)
+
+  (defvar coq-buffer)
+
+  (define-derived-mode inferior-coq-mode comint-mode "Inferior Coq"
+    "\
+  Major mode for interacting with an inferior Coq process.
+
+  The following commands are available:
+  \\{inferior-coq-mode-map}
+
+  A Coq process can be fired up with M-x run-coq.
+
+  Customisation: Entry to this mode runs the hooks on comint-mode-hook
+  and inferior-coq-mode-hook (in that order).
+
+  You can send text to the inferior Coq process from other buffers
+  containing Coq source.
+
+  Functions and key bindings (Learn more keys with `C-c C-h'):
+    C-return ('M-x coq-send-line)     send the current line.
+    C-c C-r  (`M-x coq-send-region')  send the current region.
+    C-c C-a  (`M-x coq-send-abort')   send the command \"Abort\".
+    C-c C-t  (`M-x coq-send-restart') send the command \"Restart\".
+    C-c C-s  (`M-x coq-send-show')    send the command \"Show\".
+    C-c C-u  (`M-x coq-send-undo')    send the command \"Undo\".
+    C-c C-v  (`M-x coq-check-region') run command \"Check\" on region.
+    C-c .    (`M-x coq-come-here')    Restart and send until current point.
+  "
+    ;; Customise in inferior-coq-mode-hook
+    (setq comint-prompt-regexp "^[^<]* < *")
+    (coq-mode-variables)
+    (setq mode-line-process '(":%s"))
+    (setq comint-input-filter (function coq-input-filter))
+    (setq comint-get-old-input (function coq-get-old-input)))
+
+  (defcustom inferior-coq-filter-regexp "\\`\\s *\\S ?\\S ?\\s *\\'"
+    "*Input matching this regexp are not saved on the history list.
+  Defaults to a regexp ignoring all inputs of 0, 1, or 2 letters."
+    :type 'regexp
+    :group 'inferior-coq)
+
+  (defun coq-input-filter (str)
+    "Don't save anything matching `inferior-coq-filter-regexp'."
+    (not (string-match inferior-coq-filter-regexp str)))
+
+  (defun coq-get-old-input ()
+    "Snarf the sexp ending at point."
+    (save-excursion
+      (let ((end (point)))
+	(backward-sexp)
+	(buffer-substring (point) end))))
+
+  (defun coq-args-to-list (string)
+    (let ((where (string-match "[ \t]" string)))
+      (cond ((null where) (list string))
+	    ((not (= where 0))
+	     (cons (substring string 0 where)
+		   (coq-args-to-list (substring string (+ 1 where)
+						   (length string)))))
+	    (t (let ((pos (string-match "[^ \t]" string)))
+		 (if (null pos)
+		     nil
+		   (coq-args-to-list (substring string pos
+						   (length string)))))))))
+
+  ;;;###autoload
+  (defun run-coq (cmd)
+    "Run an inferior Coq process, input and output via buffer *coq*.
+  If there is a process already running in `*coq*', switch to that buffer.
+  With argument, allows you to edit the command line (default is value
+  of `coq-program-name').  Runs the hooks `inferior-coq-mode-hook'
+  \(after the `comint-mode-hook' is run).
+  \(Type \\[describe-mode] in the process buffer for a list of commands.)"
+
+    (interactive (list (if current-prefix-arg
+			   (read-string "Run Coq: " coq-program-name)
+			   coq-program-name)))
+    (if (not (comint-check-proc "*coq*"))
+	(let ((cmdlist (coq-args-to-list cmd)))
+	  (set-buffer (apply 'make-comint "coq" (car cmdlist)
+			     nil (cdr cmdlist)))
+	  (inferior-coq-mode)))
+    (setq coq-program-name cmd)
+    (setq coq-buffer "*coq*")
+    (switch-to-buffer "*coq*"))
+  ;;;###autoload (add-hook 'same-window-buffer-names "*coq*")
+
+  ;;;###autoload
+  (defun run-coq-other-window (cmd)
+    "Run an inferior Coq process, input and output via buffer *coq*.
+  If there is a process already running in `*coq*', switch to that buffer.
+  With argument, allows you to edit the command line (default is value
+  of `coq-program-name').  Runs the hooks `inferior-coq-mode-hook'
+  \(after the `comint-mode-hook' is run).
+  \(Type \\[describe-mode] in the process buffer for a list of commands.)"
+
+    (interactive (list (if current-prefix-arg
+			   (read-string "Run Coq: " coq-program-name)
+			   coq-program-name)))
+    (if (not (comint-check-proc "*coq*"))
+	(let ((cmdlist (coq-args-to-list cmd)))
+	  (set-buffer (apply 'make-comint "coq" (car cmdlist)
+			     nil (cdr cmdlist)))
+	  (inferior-coq-mode)))
+    (setq coq-program-name cmd)
+    (setq coq-buffer "*coq*")
+    (pop-to-buffer "*coq*"))
+  ;;;###autoload (add-hook 'same-window-buffer-names "*coq*")
+
+  (defun run-coq-other-frame (cmd)
+    "Run an inferior Coq process, input and output via buffer *coq*.
+  If there is a process already running in `*coq*', switch to that buffer.
+  With argument, allows you to edit the command line (default is value
+  of `coq-program-name').  Runs the hooks `inferior-coq-mode-hook'
+  \(after the `comint-mode-hook' is run).
+  \(Type \\[describe-mode] in the process buffer for a list of commands.)"
+
+    (interactive (list (if current-prefix-arg
+			   (read-string "Run Coq: " coq-program-name)
+			   coq-program-name)))
+    (if (not (comint-check-proc "*coq*"))
+	(let ((cmdlist (coq-args-to-list cmd)))
+	  (set-buffer (apply 'make-comint "coq" (car cmdlist)
+			     nil (cdr cmdlist)))
+	  (inferior-coq-mode)))
+    (setq coq-program-name cmd)
+    (setq coq-buffer "*coq*")
+    (switch-to-buffer-other-frame "*coq*"))
+
+  (defun switch-to-coq (eob-p)
+    "Switch to the coq process buffer.
+  With argument, position cursor at end of buffer."
+    (interactive "P")
+    (if (get-buffer coq-buffer)
+	(pop-to-buffer coq-buffer)
+	(error "No current process buffer.  See variable `coq-buffer'"))
+    (cond (eob-p
+	   (push-mark)
+	   (goto-char (point-max)))))
+
+  (defun coq-send-region (start end)
+    "Send the current region to the inferior Coq process."
+    (interactive "r")
+    (comint-send-region (coq-proc) start end)
+    (comint-send-string (coq-proc) "\n"))
+
+  (defun coq-send-line ()
+    "Send the current line to the Coq process."
+    (interactive)
+    (save-excursion
+      (end-of-line)
+      (let ((end (point)))
+	(beginning-of-line)
+	(coq-send-region (point) end)))
+    (next-line 1))
+
+  (defun coq-send-back ()
+    "Send a 'Go one step back' instruction to Coq process."
+    (interactive)
+    (comint-send-string (coq-proc) "Back.\n"))
+
+  (defun coq-send-reset-ident ()
+    "Send a 'Go to ident' instruction to Coq process."
+    (interactive)
+    (comint-send-string (coq-proc) (concat (concat "Reset " (read-string "Coq Ident: ")) ".\n")))
+
+  (defun coq-send-abort ()
+    "Send the command \"Abort.\" to the inferior Coq process."
+    (interactive)
+    (comint-send-string (coq-proc) "Abort.\n"))
+
+  (defun coq-send-restart ()
+    "Send the command \"Restart.\" to the inferior Coq process."
+    (interactive)
+    (comint-send-string (coq-proc) "Restart.\n"))
+
+  (defun coq-send-undo ()
+    "Reset coq to the initial state and send the region between the
+     beginning of file and the point."
+    (interactive)
+    (comint-send-string (coq-proc) "Undo.\n"))
+
+  (defun coq-check-region (start end)
+    "Run the commmand \"Check\" on the current region."
+    (interactive "r")
+    (comint-proc-query (coq-proc)
+		       (concat "Check "
+			       (buffer-substring start end)
+			       ".\n")))
+
+  (defun coq-send-show ()
+    "Send the command \"Show.\" to the inferior Coq process."
+    (interactive)
+    (comint-send-string (coq-proc) "Show.\n"))
+
+  (defun coq-come-here ()
+    "Reset coq to the initial state and send the region between the
+     beginning of file and the point."
+    (interactive)
+    (comint-send-string (coq-proc) "Reset Initial.\n")
+    (coq-send-region 1 (point)))
+
+  (defvar coq-buffer nil "*The current coq process buffer.")
+
+  (defun coq-proc ()
+    "Return the current coq process.  See variable `coq-buffer'."
+    (let ((proc (get-buffer-process (if (eq major-mode 'inferior-coq-mode)
+					(current-buffer)
+					coq-buffer))))
+      (or proc
+	  (error "No current process.  See variable `coq-buffer'"))))
+
+  (defcustom inferior-coq-load-hook nil
+    "This hook is run when inferior-coq is loaded in.
+  This is a good place to put keybindings."
+    :type 'hook
+    :group 'inferior-coq)
+
+  (run-hooks 'inferior-coq-load-hook)
+
+  (provide 'inferior-coq)
+#+end_src
+
+#+begin_src emacs-lisp :tangle no
+(setq auto-mode-alist (cons '("\\.v$" . coq-mode) auto-mode-alist))
+(autoload 'coq-mode "coq" "Major mode for editing Coq vernacular." t)
+(autoload 'run-coq "inferior-coq" "Run an inferior Coq process." t)
+(autoload 'run-coq-other-window "inferior-coq"
+  "Run an inferior Coq process in a new window." t)
+(autoload 'run-coq-other-frame "inferior-coq"
+  "Run an inferior Coq process in a new frame." t)
+#+end_src
+
+#+begin_src emacs-lisp  :tangle no
+(defvar emacsd-dir "/home/au538501/.emacs.d/") ;
+(setq package-user-dir (concat emacsd-dir "elpa"))
+
+;; (package-initialize)
+
+(require 'org)
+(require 'ox-html)
+
+(setq org-html-postamble nil)
+(setq org-confirm-babel-evaluate nil)
+
+(require 'comint)
+
+(defvar coq-program-name "coqtop")
+
+(defvar coq-buffer)
+
+(define-derived-mode inferior-coq-mode comint-mode "Run Coq"
+  ""
+  (setq comint-prompt-regexp "^[^<]* < *"))
+
+(defun coq-args-to-list (string)
+  (let ((where (string-match "[ \t]" string)))
+    (cond ((null where) (list string))
+    ((not (= where 0))
+     (cons (substring string 0 where)
+     (coq-args-to-list (substring string (+ 1 where)
+	     (length string)))))
+    (t (let ((pos (string-match "[^ \t]" string)))
+	 (if (null pos)
+       nil
+     (coq-args-to-list (substring string pos
+	     (length string)))))))))
+
+(defun run-coq (cmd)
+  (interactive (list (if current-prefix-arg
+       (read-string "Run Coq: " coq-program-name)
+       coq-program-name)))
+  (if (not (comint-check-proc "*coq*"))
+      (let ((cmdlist (coq-args-to-list cmd)))
+  (set-buffer (apply 'make-comint "coq" (car cmdlist)
+	 nil (cdr cmdlist)))
+  (inferior-coq-mode)))
+  (setq coq-program-name cmd)
+  (setq coq-buffer "*coq*")
+  (switch-to-buffer "*coq*"))
+
+(defun coq-proc ()
+  "Return the current coq process.  See variable `coq-buffer'."
+  (let ((proc (get-buffer-process (if (eq major-mode 'inferior-coq-mode)
+	      (current-buffer)
+	      coq-buffer))))
+    (or proc
+  (error "No current process.  See variable `coq-buffer'"))))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((coq . t)))
+
+;; I need to redefine these function, as they have some issues.
+
+(defun org-babel-coq-split-phrases (body)
+  (split-string body "\\.[ \t\n\r]+"))
+
+(defun org-babel-coq-run-one-phrase (phrase session)
+  (let ((pt (lambda ()
+	(marker-position
+	 (process-mark (get-buffer-process (current-buffer)))))))
+    (org-babel-coq-clean-prompt
+     (org-babel-comint-in-buffer session
+       (let ((start (funcall pt)))
+   (with-temp-buffer
+     (insert phrase)
+     (comint-send-region (coq-proc) (point-min) (point-max))
+     (comint-send-string (coq-proc)
+      (if (string= (buffer-substring (- (point-max) 1) (point-max)) ".")
+    "\n"
+	".\n")))
+   (while (equal start (funcall pt)) (sleep-for 0.1))
+   (buffer-substring start (funcall pt)))))))
+
+(defun org-babel-execute:coq (body params)
+  (let ((full-body (org-babel-expand-body:generic body params))
+	(session (org-babel-coq-initiate-session)))
+    (let ((phrases (org-babel-coq-split-phrases full-body))
+	  results)
+      (while phrases
+	(unless (string-match "^\s*\\'" (car phrases))
+	  (setq results
+		(cons (org-babel-coq-run-one-phrase (car phrases) session) results)))
+	(setq phrases (cdr phrases)))
+      (apply #'concat (reverse results)))))
+
+(defun org-babel-coq-initiate-session ()
+  "Initiate a coq session.
+If there is not a current inferior-process-buffer in SESSION then
+create one.  Return the initialized session."
+  (unless (fboundp 'run-coq)
+    (error "`run-coq' not defined, load coq-inferior.el"))
+  (save-window-excursion (run-coq coq-program-name))
+  (sit-for 0.1)
+  (get-buffer org-babel-coq-buffer))	;
+#+end_src
