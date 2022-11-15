@@ -12,78 +12,24 @@
 
 * Better start
 #+BEGIN_SRC emacs-lisp
-  (custom-set-variables
-  '(inhibit-startup-screen t))
+(custom-set-variables
+ '(inhibit-startup-screen t))
 
-  (setq make-backup-files nil) ; stop creating backup~ files
-  (setq auto-save-default nil) ; stop creating #autosave# files
+(setq make-backup-files nil) ; stop creating backup~ files
+(setq auto-save-default nil) ; stop creating #autosave# files
+(setq create-lockfiles nil) ; stop creating .#autosave files
 
-  (setq visible-bell t) ; os / emacs sounds off
+(setq visible-bell t) ; os / emacs sounds off
 
-  (menu-bar-mode -1) ; Don't show menu bar
-  (tool-bar-mode -1) ; Don't show tool bar
+(menu-bar-mode -1) ; Don't show menu bar
+(tool-bar-mode -1) ; Don't show tool bar
 
-  (line-number-mode 1)   ;; Show line number
-  (column-number-mode 1) ;; Show column number
+(line-number-mode 1)   ;; Show line number
+(column-number-mode 1) ;; Show column number
 
-  (setq debug-on-error 1) ;; Show backtrace on emacs lisp error
+(setq debug-on-error 1) ;; Show backtrace on emacs lisp error
 #+END_SRC
-
-* Looks
-** Theme
-#+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
-  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
-
-  ;; (custom-set-faces
-  ;;  '(default ((t (:foreground "white"))))
-  ;;  '(bold ((t (:weight bold))))
-  ;;  '(italic ((t (:slant italic))))
-  ;;  '(bold-italic ((t (:weight bold :slant italic))))
-  ;;  '(underline ((t (:underline '(:color "Foreground Color" :style "Line")))))
-  ;;  '(fixed-pitch ((t (:family "Monospace"))))
-  ;;  '(variable-pitch ((t (:family "Sans Serif"))))
-  ;;  '(shadow ((t (:foreground "grey70" :background "gray10")))) ;; Had no background
-  ;;  '(link ((t (:underline '(:color Foreground Color :style "Line")) :foreground "cyan")))
-  ;;  '(link-visited ((t (:underline '(:color "Foreground Color" :style "Line")) :foreground "dark cyan")))
-  ;;  '(highlight ((t (:foreground "white" :background "dark green"))))
-  ;;  '(match ((t (:background "RoyalBlue3"))))
-  ;;  '(isearch ((t (:foreground "white" :background "dark goldenrod"))))
-  ;;  '(lazy-highlight ((t (:background "gray25"))))
-  ;;  )
-
-
-  ;; (custom-set-faces
-  ;; '(mode-line ((t (:background "grey75" :foreground "black"))))
-  ;;  '(mode-line-buffer-id ((t (:weight bold))))
-  ;;  '(mode-line-buffer-id-inactive ((t (:inherit 'mode-line-buffer-id))))
-  ;;  '(mode-line-emphasis ((t (:weight bold))))
-  ;;  '(mode-line-highlight ((t (:foreground "blue" :box (:line-width 1 :style released-button))))))
-#+END_SRC
-* List of used packages
- - AUCTEX (for LaTeX)
- - SML-mode
- - Magit (for better git)
- - Multiple-cursors
- - Rainbow-delimiters
- - Tuareg (for ocaml coding)
- - Flycheck (syntax checking)
-   - Flycheck-color-mode-line
- - Powerline
- - Company
-   - company (for c,c++,...)
-   - company-auctex
-   - company-coq
-   - company-rtags
- - Scala mode
- - Haskell-mode
- - Lsp mode
- - Org mode, htmlize (for color)
-
-TODO:
- - Flyspell
-
-* List of used ubuntu
+* Ubuntu installs
 #+BEGIN_SRC bash :tangle no
   sudo apt install texlive-full
   sudo apt install opam
@@ -91,12 +37,11 @@ TODO:
 
   gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
 #+END_SRC
-
-* Keyboard setup (QMK)
-#+BEGIN_SRC bash :tangle no
-  git clone git@github.com:cmester0/keyboard_setup.git
-#+END_SRC
-
+** Printer setup
+You are going to install following packages.
+   hl1210wlpr-3.0.1-1.i386.deb
+   hl1210wcupswrapper-3.0.1-1.i386.deb
+Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
 * Install missing packages
 #+BEGIN_SRC emacs-lisp
 (require 'package)
@@ -105,28 +50,201 @@ TODO:
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-  (mapcar
-   (lambda (package)
-     (unless (package-installed-p package)
-       (package-install package)))
-   '(auctex
-     sml-mode
-     magit
-     ;; multiple-cursors
-     rainbow-delimiters
-     ;; tuareg
-     flycheck
-     flycheck-color-mode-line
-     powerline
-     company
-     company-auctex
-     company-coq
-     company-rtags
-     scala-mode
-     haskell-mode
-     proof-general))
+(mapcar
+ (lambda (package)
+   (unless (package-installed-p package)
+     (package-install package)))
+ '(auctex
+   sml-mode
+   magit
+   ;; multiple-cursors
+   rainbow-delimiters
+   ;; tuareg
+   flycheck
+   flycheck-color-mode-line
+   powerline
+   company
+   company-auctex
+   company-coq
+   company-rtags
+   scala-mode
+   haskell-mode
+   proof-general
+   smartparens))
+#+END_SRC
+* Looks
+** Theme
+#+BEGIN_SRC emacs-lisp
+  (load-theme 'wheatgrass)
+  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
+#+END_SRC
+** Pretty symbol modes
+#+BEGIN_SRC emacs-lisp
+  (setq read-quoted-char-radix 10)
+  ;; C-q use decimal codes (quoted-insert)
+
+
+  (defun pretty-symbols-preview-latex ()
+    "make some word or string show as pretty Unicode symbols"
+    (setq prettify-symbols-alist
+	  (append
+	   '(("lambda" . 955) ; λ
+	     ("<-" . 8592) ; ←
+	     ("->" . 8594) ; →
+	     ("<->" . 8596) ; ↔
+	     ("=>" . 8658) ; ⇒
+	     ("<=>" . 8660) ; ⇔
+	     ("\\circ" . 9702) ; ◦
+	     ("|[" . 10214) ; ⟦
+	     ("|]" . 10215) ; ⟧
+	     ("\\[" . 9128) ; ⎨
+	     ("\\]" . 9132) ; ⎬
+	     ("\\(" . "(")
+	     ("\\)" . ")")
+	     ("\\land" . 8743) ; ∧
+	     ("\\lor" . 8744) ; ∨
+	     ("\\subset" . 8834) ; ⊂
+	     ("\\subseteq" . 8838) ; ⊆
+	     ("\\mathbb{A}" . 120120) ; 𝔸
+	     ("\\mathbb{B}" . 120121) ; 𝔹
+	     ("\\mathbb{C}" . 8450) ; ℂ
+	     ("\\mathbb{D}" . 120123) ; 𝔻
+	     ("\\mathbb{E}" . 120124) ; 𝔼
+	     ("\\mathbb{F}" . 120125) ; 𝔽
+	     ("\\mathbb{G}" . 120126) ; 𝔾
+	     ("\\mathbb{H}" . 8461) ; ℍ
+	     ("\\mathbb{I}" . 120128) ; 𝕀
+	     ("\\mathbb{J}" . 120129) ; 𝕁
+	     ("\\mathbb{K}" . 120130) ; 𝕂
+	     ("\\mathbb{L}" . 120131) ; 𝕃
+	     ("\\mathbb{M}" . 120132) ; 𝕄
+	     ("\\mathbb{N}" . 8469) ; ℕ
+	     ("\\mathbb{O}" . 120134) ; 𝕆
+	     ("\\mathbb{P}" . 8473) ; ℙ
+	     ("\\mathbb{Q}" . 8474) ; ℚ
+	     ("\\mathbb{R}" . 8477) ; ℝ
+	     ("\\mathbb{S}" . 120138) ; 𝕊
+	     ("\\mathbb{T}" . 120139) ; 𝕋
+	     ("\\mathbb{U}" . 120140) ; 𝕌
+	     ("\\mathbb{V}" . 120141) ; 𝕍
+	     ("\\mathbb{W}" . 120142) ; 𝕎
+	     ("\\mathbb{X}" . 120143) ; 𝕏
+	     ("\\mathbb{Y}" . 120144) ; 𝕐
+	     ("\\mathbb{Z}" . 8484) ; ℤ
+	     ("\\mathcal{A}" . 119964) ; 𝒜
+	     ("\\mathcal{B}" . 8492) ; ℬ
+	     ("\\mathcal{C}" . 119966) ; 𝒞
+	     ("\\mathcal{D}" . 119967) ; 𝒟
+	     ("\\mathcal{E}" . 8496) ; ℰ
+	     ("\\mathcal{F}" . 8497) ; ℱ
+	     ("\\mathcal{G}" . 119970) ; 𝒢
+	     ("\\mathcal{H}" . 8459) ; ℋ
+	     ("\\mathcal{I}" . 8464) ; ℐ
+	     ("\\mathcal{J}" . 119973) ; 𝒥
+	     ("\\mathcal{K}" . 119974) ; 𝒦
+	     ("\\mathcal{L}" . 8466) ; ℒ
+	     ("\\mathcal{M}" . 8499) ; ℳ
+	     ("\\mathcal{N}" . 119977) ; 𝒩
+	     ("\\mathcal{O}" . 119978) ; 𝒪
+	     ("\\mathcal{P}" . 119979) ; 𝒫
+	     ("\\mathcal{Q}" . 119980) ; 𝒬
+	     ("\\mathcal{R}" . 8475) ; ℛ
+	     ("\\mathcal{S}" . 119982) ; 𝒮
+	     ("\\mathcal{T}" . 119983) ; 𝒯
+	     ("\\mathcal{U}" . 119984) ; 𝒰
+	     ("\\mathcal{V}" . 119985) ; 𝒱
+	     ("\\mathcal{W}" . 119986) ; 𝒲
+	     ("\\mathcal{X}" . 119987) ; 𝒳
+	     ("\\mathcal{Y}" . 119988) ; 𝒴
+	     ("\\mathcal{Z}" . 119989) ; 𝒵
+	     ("\\ell" . 8467) ; ℓ
+	     ("\\qquad" . 12061) ; ⼝
+	     ("\\dots" . 8230) ; …
+	     ("\\cdots" . 8943) ; ⋯
+	     ("\\bigsqcap" . 10757) ; ⨅
+	     ("\\bigsqcup" . 10758) ; ⨆
+	     ("\\rightsquigarrow" . 8669) ; ⇝
+	     ("|-" . 8866) ; ⊢
+	     ("\\not\\equiv" . 8802) ; ≢
+	     ("\\llbracket" . 10214) ; ⟦
+	     ("\\rrbracket" . 10215) ; ⟧
+	     ("\\\\[" . "[") ;
+	     ("\\set{" . "{") ;
+	     )
+	   prettify-symbols-alist ;; tex--prettify-symbols-alist
+	   )))
+
+
+  (setq inhibit-compacting-font-caches t)
+
+  ;;AUCTeX
+  (add-hook 'tex-mode-hook 'pretty-symbols-preview-latex)
+  (add-hook 'latex-mode-hook 'pretty-symbols-preview-latex)
+  (add-hook 'LaTeX-mode-hook 'pretty-symbols-preview-latex)
+
+  ;; Uncomment to unfold definitions when hovered:
+					  ; (setq prettify-symbols-unprettify-at-point t)
+
+  (global-prettify-symbols-mode 1)
+#+END_SRC
+* Util
+** Display Batery Mode
+#+BEGIN_SRC emacs-lisp
+  (display-battery-mode 1)
 #+END_SRC
 
+** CEDETs
+*** Semantic
+#+BEGIN_SRC emacs-lisp
+  (require 'cc-mode)
+  (require 'semantic)
+
+  (semantic-mode 1)
+
+  ;; (global-semantic-idle-completions-mode) ;; AUTO-COMPLETE
+
+  (semantic-add-system-include "~/linux/kernel")
+  (semantic-add-system-include "~/linux/include")
+
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode) ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+  (add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode) ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)  ;; COMMENT OUT
+  (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)  ;; COMMENT OUT
+
+  (require 'semantic/ia)
+  (require 'semantic/bovine/c)
+  (require 'semantic/bovine/gcc)
+
+  (setq semantic-complete-inline-analyzer-displayor-class
+	'semantic-displayor-ghost)
+#+END_SRC
+
+*** EDE
+** Parenthesis matching
+#+BEGIN_SRC emacs-lisp
+(global-set-key (kbd "M-)") (quote check-parens))
+(show-paren-mode)
+
+(require 'rainbow-delimiters)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+;; (global-rainbow-delimiters-mode)
+#+END_SRC
+** Whitespace rendering
+#+BEGIN_SRC emacs-lisp
+(setq-default show-trailing-whitespace t)
+(setq-default missing-newline-at-eof t)
+#+END_SRC
+* Inputs
+** Keyboard setup (QMK)
+#+BEGIN_SRC bash :tangle no
+  git clone git@github.com:cmester0/keyboard_setup.git
+#+END_SRC
 * Fonts
 You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And `C-u C-x =` to check data under cursor. Or even: `customize-face`.
 
@@ -186,20 +304,6 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
    '(rainbow-delimiters-unmatched-face ((t (:foreground "blue" :background "yellow3" :inherit 'rainbow-delimiters-base-face)))))
 #+END_SRC
 
-** Powerline
-#+BEGIN_SRC emacs-lisp
-  ;; (require 'powerline)
-  ;; (powerline-default-theme)
-
-  ;; (custom-set-faces
-  ;;  '(powerline-active0 ((t (:inherit nil :foreground "white" :background "purple3"))))
-  ;;  '(powerline-active1 ((t (:inherit nil :foreground "black" :background "yellow3"))))
-  ;;  '(powerline-active2 ((t (:inherit nil :foreground "white" :background "DeepPink3" :distant-foreground "green"))))
-  ;;  '(powerline-inactive0 ((t (:inherit nil :foreground "gray60" :background "purple4"))))
-  ;;  '(powerline-inactive1 ((t (:inherit nil :foreground "gray30" :background "yellow4"))))
-  ;;  '(powerline-inactive2 ((t (:inherit nil :foreground "gray50" :background "DeepPink4")))))
-#+END_SRC
-
 ** Smart mode line
 #+begin_src emacs-lisp
   (setq sml/no-confirm-load-theme t)
@@ -257,109 +361,15 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
    '(agda2-highlight-field-face ((t (:foreground "magenta")))))
 #+END_SRC
 
-*** Coq / proof general
-#+begin_src emacs-lisp
-  (custom-set-faces
-   ;; '(proof-active-area-face ((t (:foreground "magenta"))))
-   ;; '(proof-boring-face ((t (:foreground "magenta"))))
-   ;; '(proof-command-mouse-highlight-face ((t (:foreground "magenta"))))
-   ;; '(proof-debug-message-face ((t (:foreground "magenta"))))
-   ;; '(proof-declaration-name-face ((t (:foreground "magenta"))))
-   ;; '(proof-eager-annotation-face ((t (:foreground "magenta"))))
-   ;; '(proof-error-face ((t (:foreground "magenta"))))
-   ;; '(proof-highlight-dependency-face ((t (:foreground "magenta"))))
-   ;; '(proof-highlight-dependent-face ((t (:foreground "magenta"))))
-   ;; '(proof-locked-face ((t (:foreground "magenta"))))
-   ;; '(proof-mouse-highlight-face ((t (:foreground "magenta"))))
-   ;; '(proof-omitted-proof-face ((t (:foreground "magenta"))))
-   ;; '(proof-queue-face ((t (:foreground "magenta"))))
-   ;; '(proof-region-mouse-highlight-face ((t (:foreground "magenta"))))
-   ;; '(proof-script-highlight-error-face ((t (:foreground "magenta"))))
-   ;; '(proof-script-sticky-error-face ((t (:foreground "magenta"))))
-   ;; '(proof-tacticals-name-face ((t (:foreground "magenta"))))
-   ;; '(proof-tactics-name-face ((t (:foreground "magenta"))))
-   ;; '(proof-warning-face ((t (:foreground "magenta"))))
-
-   ;; '(company-coq-comment-h1-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-comment-h2-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-comment-h3-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-coqdoc-h1-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-coqdoc-h2-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-coqdoc-h3-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-coqdoc-h4-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-doc-header-face-about ((t (:foreground "magenta"))))
-   ;; '(company-coq-doc-header-face-docs-and-sources ((t (:foreground "magenta"))))
-   ;; '(company-coq-doc-i-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-doc-tt-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-features/code-folding-bullet-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-features/code-folding-ellipsis-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-features/refactorings-highlight-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-features/smart-subscripts-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-goal-separator-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-inline-docs-face ((t (:foreground "magenta"))))
-   ;; '(company-coq-snippet-hole-face ((t (:foreground "magenta"))))
-
-   ;; '(coq-button-face ((t (:foreground "magenta"))))
-   ;; '(coq-button-face-active ((t (:foreground "magenta"))))
-   ;; '(coq-button-face-pressed ((t (:foreground "magenta"))))
-   ;; '(coq-cheat-face ((t (:foreground "magenta"))))
-   ;; '(coq-context-qualifier-face ((t (:foreground "magenta"))))
-   ;; '(coq-diffs-added-bg-face ((t (:foreground "magenta"))))
-   ;; '(coq-diffs-added-face ((t (:foreground "magenta"))))
-   ;; '(coq-diffs-removed-bg-face ((t (:foreground "magenta"))))
-   ;; '(coq-diffs-removed-face ((t (:foreground "magenta"))))
-   ;; '(coq-question-mark-face ((t (:foreground "magenta"))))
-   ;; '(coq-solve-tactics-face ((t (:foreground "magenta"))))
-   ;; '(coq-symbol-binder-face ((t (:foreground "magenta"))))
-   ;; '(coq-symbol-face ((t (:foreground "magenta"))))
-
-   ;; '(font-lock-builtin-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-comment-delimiter-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-comment-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-constant-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-doc-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-function-name-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-keyword-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-negation-char-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-preprocessor-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-regexp-grouping-backslash ((t (:foreground "magenta"))))
-   ;; '(font-lock-regexp-grouping-construct ((t (:foreground "magenta"))))
-   ;; '(font-lock-string-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-type-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-variable-name-face ((t (:foreground "magenta"))))
-   ;; '(font-lock-warning-face ((t (:foreground "magenta"))))
-   )
-#+end_src
-
-*** Rust
-#+BEGIN_SRC emacs-lisp
-  ;; Basics
-  ;; (custom-set-faces
-  ;;  '(org-level-1 ((t (:foreground "purple1"))))
-  ;;  '(org-level-2 ((t (:foreground "red1"))))
-  ;;  '(org-level-3 ((t (:foreground "orange1"))))
-  ;;  '(org-level-4 ((t (:foreground "yellow1"))))
-  ;;  '(org-level-5 ((t (:foreground "green1"))))
-  ;;  '(org-level-6 ((t (:foreground "cyan1"))))
-  ;;  '(org-level-7 ((t (:foreground "blue1"))))
-  ;;  '(org-level-8 ((t (:foreground "magenta1"))))
-  ;;  '(org-block ((t (:foreground "gray70" :background "gray10")))) ; ((t (:inherit 'shadow))) (gray70)
-  ;;  '(org-default ((t (:inherit 'default))))
-  ;;  '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
-  ;;  '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
-  ;;  '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
-  ;;  )
-#+END_SRC
-
 * Flycheck
 #+BEGIN_SRC emacs-lisp
-  ;; (global-flycheck-mode)
+;; (global-flycheck-mode)
 
-  (eval-after-load "flycheck"
-    '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
+(eval-after-load "flycheck"
+  '(add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode))
 #+END_SRC
-
-* LaTeX
+* File format modes
+** LaTeX
 ** AUCTEX
 #+BEGIN_SRC emacs-lisp
   ;; AUC-TEX
@@ -474,7 +484,7 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
        ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 #+END_SRC
 
-* Org mode
+** Org mode
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-folded t)
   (add-hook 'org-mode-hook 'org-hide-block-all)
@@ -496,13 +506,13 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
   (require 'ox-beamer)
   ;; (add-to-list 'org-export-backends 'beamer)
 
-  (setq org-latex-listings 'minted)
-  (setq org-latex-packages-alist '(("" "minted")))
-  (add-to-list 'org-latex-packages-alist '("" "fullpage"))
-  (add-to-list 'org-latex-packages-alist '("" "color"))
+  ;; (setq org-latex-listings 'minted)
+  ;; (setq org-latex-packages-alist '(("" "minted")))
+  ;; (add-to-list 'org-latex-packages-alist '("" "fullpage"))
+  ;; (add-to-list 'org-latex-packages-alist '("" "color"))
 
-  (setq org-latex-minted-options
-	'(("linenos") ("breaklines")))
+  ;; (setq org-latex-minted-options
+  ;; 	'(("linenos") ("breaklines")))
 
   (setq org-latex-to-pdf-process
 	'("pdflatex -shell-escape -interaction nonstopmode %f"
@@ -577,7 +587,7 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 	t)))
 #+end_src
 
-* C/C++ coding
+** C/C++ coding
 ** Indentation
 #+BEGIN_SRC emacs-lisp
   ;; C indentation
@@ -588,256 +598,412 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 	indent-tabs-mode t)
 #+END_SRC
 
-* Coding in general
-** Code folding
-#+BEGIN_SRC emacs-lisp
-  ;; (defun hide()
-  ;;  (interactive)
-  ;;  (hs-minor-mode)
-  ;;  (hs-hide-all))
-
-  ;; (add-hook 'prog-mode-hook 'hide) ;; Run on startup /
-
-  ;; (defadvice goto-line
-  ;;    (after expand-after-goto-line activate compile)
-  ;;  "hideshow-expand affected block when using goto-line in a collapsed buffer"
-  ;;  (save-excursion
-  ;;    (hs-show-block))) ;; Expand on goto
-
-  ;; (setq hs-isearch-open 'x)
-  ;; (global-set-key (kbd "C-+") (kbd "C-c @ C-c")) ;; Toggles hiding
-#+END_SRC
-
-** CEDET
-*** Semantic
-#+BEGIN_SRC emacs-lisp
-  (require 'cc-mode)
-  (require 'semantic)
-
-  (semantic-mode 1)
-
-  ;; (global-semantic-idle-completions-mode) ;; AUTO-COMPLETE
-
-  (semantic-add-system-include "~/linux/kernel")
-  (semantic-add-system-include "~/linux/include")
-
-  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
-  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode) ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode) ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)  ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)  ;; COMMENT OUT
-
-  (require 'semantic/ia)
-  (require 'semantic/bovine/c)
-  (require 'semantic/bovine/gcc)
-
-  (setq semantic-complete-inline-analyzer-displayor-class
-	'semantic-displayor-ghost)
-#+END_SRC
-
-*** EDE
-** Parenthesis matching
-#+BEGIN_SRC emacs-lisp
-  (show-paren-mode)
-
-  (require 'rainbow-delimiters)
-  (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
-  ;; (global-rainbow-delimiters-mode)
-#+END_SRC
-
-* Git
-** Magit
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
-
-  (setq magit-bury-buffer-function
-	(lambda (con)
-	  (kill-buffer)
-	  (delete-window)))
-#+END_SRC
-* EasyCrypt
-#+BEGIN_SRC emacs-lisp
-  ;; (load-file "/home/lasse/opam-coq.8.9.0/default/share/proofgeneral/generic/proof-site.el")
-#+END_SRC
-
-* Display Batery Mode
-#+BEGIN_SRC emacs-lisp
-  (display-battery-mode 1)
-#+END_SRC
-
-* Pretty symbol modes
-#+BEGIN_SRC emacs-lisp
-  (setq read-quoted-char-radix 10)
-  ;; C-q use decimal codes (quoted-insert)
-
-
-  (defun pretty-symbols-preview-latex ()
-    "make some word or string show as pretty Unicode symbols"
-    (setq prettify-symbols-alist
-	  (append
-	   '(("lambda" . 955) ; λ
-	     ("<-" . 8592) ; ←
-	     ("->" . 8594) ; →
-	     ("<->" . 8596) ; ↔
-	     ("=>" . 8658) ; ⇒
-	     ("<=>" . 8660) ; ⇔
-	     ("\\circ" . 9702) ; ◦
-	     ("|[" . 10214) ; ⟦
-	     ("|]" . 10215) ; ⟧
-	     ("\\[" . 9128) ; ⎨
-	     ("\\]" . 9132) ; ⎬
-	     ("\\(" . "(")
-	     ("\\)" . ")")
-	     ("\\land" . 8743) ; ∧
-	     ("\\lor" . 8744) ; ∨
-	     ("\\subset" . 8834) ; ⊂
-	     ("\\subseteq" . 8838) ; ⊆
-	     ("\\mathbb{A}" . 120120) ; 𝔸
-	     ("\\mathbb{B}" . 120121) ; 𝔹
-	     ("\\mathbb{C}" . 8450) ; ℂ
-	     ("\\mathbb{D}" . 120123) ; 𝔻
-	     ("\\mathbb{E}" . 120124) ; 𝔼
-	     ("\\mathbb{F}" . 120125) ; 𝔽
-	     ("\\mathbb{G}" . 120126) ; 𝔾
-	     ("\\mathbb{H}" . 8461) ; ℍ
-	     ("\\mathbb{I}" . 120128) ; 𝕀
-	     ("\\mathbb{J}" . 120129) ; 𝕁
-	     ("\\mathbb{K}" . 120130) ; 𝕂
-	     ("\\mathbb{L}" . 120131) ; 𝕃
-	     ("\\mathbb{M}" . 120132) ; 𝕄
-	     ("\\mathbb{N}" . 8469) ; ℕ
-	     ("\\mathbb{O}" . 120134) ; 𝕆
-	     ("\\mathbb{P}" . 8473) ; ℙ
-	     ("\\mathbb{Q}" . 8474) ; ℚ
-	     ("\\mathbb{R}" . 8477) ; ℝ
-	     ("\\mathbb{S}" . 120138) ; 𝕊
-	     ("\\mathbb{T}" . 120139) ; 𝕋
-	     ("\\mathbb{U}" . 120140) ; 𝕌
-	     ("\\mathbb{V}" . 120141) ; 𝕍
-	     ("\\mathbb{W}" . 120142) ; 𝕎
-	     ("\\mathbb{X}" . 120143) ; 𝕏
-	     ("\\mathbb{Y}" . 120144) ; 𝕐
-	     ("\\mathbb{Z}" . 8484) ; ℤ
-	     ("\\mathcal{A}" . 119964) ; 𝒜
-	     ("\\mathcal{B}" . 8492) ; ℬ
-	     ("\\mathcal{C}" . 119966) ; 𝒞
-	     ("\\mathcal{D}" . 119967) ; 𝒟
-	     ("\\mathcal{E}" . 8496) ; ℰ
-	     ("\\mathcal{F}" . 8497) ; ℱ
-	     ("\\mathcal{G}" . 119970) ; 𝒢
-	     ("\\mathcal{H}" . 8459) ; ℋ
-	     ("\\mathcal{I}" . 8464) ; ℐ
-	     ("\\mathcal{J}" . 119973) ; 𝒥
-	     ("\\mathcal{K}" . 119974) ; 𝒦
-	     ("\\mathcal{L}" . 8466) ; ℒ
-	     ("\\mathcal{M}" . 8499) ; ℳ
-	     ("\\mathcal{N}" . 119977) ; 𝒩
-	     ("\\mathcal{O}" . 119978) ; 𝒪
-	     ("\\mathcal{P}" . 119979) ; 𝒫
-	     ("\\mathcal{Q}" . 119980) ; 𝒬
-	     ("\\mathcal{R}" . 8475) ; ℛ
-	     ("\\mathcal{S}" . 119982) ; 𝒮
-	     ("\\mathcal{T}" . 119983) ; 𝒯
-	     ("\\mathcal{U}" . 119984) ; 𝒰
-	     ("\\mathcal{V}" . 119985) ; 𝒱
-	     ("\\mathcal{W}" . 119986) ; 𝒲
-	     ("\\mathcal{X}" . 119987) ; 𝒳
-	     ("\\mathcal{Y}" . 119988) ; 𝒴
-	     ("\\mathcal{Z}" . 119989) ; 𝒵
-	     ("\\ell" . 8467) ; ℓ
-	     ("\\qquad" . 12061) ; ⼝
-	     ("\\dots" . 8230) ; …
-	     ("\\cdots" . 8943) ; ⋯
-	     ("\\bigsqcap" . 10757) ; ⨅
-	     ("\\bigsqcup" . 10758) ; ⨆
-	     ("\\rightsquigarrow" . 8669) ; ⇝
-	     ("|-" . 8866) ; ⊢
-	     ("\\not\\equiv" . 8802) ; ≢
-	     ("\\llbracket" . 10214) ; ⟦
-	     ("\\rrbracket" . 10215) ; ⟧
-	     ("\\\\[" . "[") ;
-	     ("\\set{" . "{") ;
-	     )
-	   prettify-symbols-alist ;; tex--prettify-symbols-alist
-	   )))
-
-
-  (setq inhibit-compacting-font-caches t)
-
-  ;;AUCTeX
-  (add-hook 'tex-mode-hook 'pretty-symbols-preview-latex)
-  (add-hook 'latex-mode-hook 'pretty-symbols-preview-latex)
-  (add-hook 'LaTeX-mode-hook 'pretty-symbols-preview-latex)
-
-  ;; Uncomment to unfold definitions when hovered:
-					  ; (setq prettify-symbols-unprettify-at-point t)
-
-  (global-prettify-symbols-mode 1)
-#+END_SRC
-
-* Paranthesis matching
-#+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-)") (quote check-parens))
-#+END_SRC
-* Printer setup
-You are going to install following packages.
-   hl1210wlpr-3.0.1-1.i386.deb
-   hl1210wcupswrapper-3.0.1-1.i386.deb
-Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
-* Agda
-# #+BEGIN_SRC emacs-lisp
-#   (load-file (let ((coding-system-for-read 'utf-8))
-# 		  (shell-command-to-string "agda-mode locate")))
-# #+END_SRC
-* Rust
+** Rust
 #+BEGIN_SRC emacs-lisp
   (add-hook 'rust-mode-hook
 	    (lambda () (setq indent-tabs-mode nil)))
   (add-hook 'rust-mode-hook 'yas-minor-mode)
 
   ;; TODO: add yas-mode so rustic does not complain on auto-complete
-
   (setq rust-format-on-save t)
 #+END_SRC
-
-* LSP
-** Rust
-#+BEGIN_SRC emacs-lisp
-  (setq lsp-rust-server 'rust-analyzer)
-#+END_SRC
-
-* Tags
-# #+BEGIN_SRC emacs-lisp
-#    (defadvice xref-find-definitions (before c-tag-file activate)
-#    "Automatically create tags file."
-#    (let ((tag-file (concat default-directory "TAGS")))
-#      (unless (file-exists-p tag-file)
-#        (shell-command "etags *.[ch] -o TAGS 2>/dev/null"))
-#      (visit-tags-table tag-file)))
-# #+END_SRC
-
-* Coq
+** Coq
 #+begin_src emacs-lisp
 (load "~/.emacs.d/lisp/PG/generic/proof-site")
 (setq proof-assistant "Coq")
-(load "/home/au538501/.emacs.d/elpa/proof-general-20220525.1052/coq/coq")
+;; (load "/home/au538501/.emacs.d/elpa/proof-general-20220525.1052/coq/coq")
 
 (setq proof-splash-enable nil)
 #+end_src
 
+*** opam switch
+Run `opam user-setup install` to get access to:
+#+begin_src emacs-lisp :tangle no
+(defun opam-env ()
+  (interactive nil)
+  (dolist (var (car (read-from-string (shell-command-to-string "opam config env --sexp"))))
+    (setenv (car var) (cadr var))))
+#+end_src
+
+**** opam-switch-mode
+https://github.com/ProofGeneral/opam-switch-mode
+#+begin_src emacs-lisp
+;;; opam-switch-mode.el --- select opam switches within emacs  -*- lexical-binding: t; -*-
+;;
+;; Copyright (C) 2021 Hendrik Tews
+;;
+;; Authors: Hendrik Tews
+;; Maintainer: Hendrik Tews <hendrik@askra.de>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+;;
+;; This file is free software: you can redistribute it and/or
+;; modify it under the terms of the GNU General Public License as
+;; published by the Free Software Foundation, either version 3 of the
+;; License, or (at your option) any later version.
+;; 
+;; This file is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+;; General Public License in file COPYING in this or one of the parent
+;; directories for more details.
+;; 
+;; You should have received a copy of the GNU General Public License
+;; along with "prooftree". If not, see <http://www.gnu.org/licenses/>.
+;; 
+;; 
+;;; Commentary:
+;;
+;; Provide command `opam-switch-set-switch' to change the opam switch
+;; of the running emacs session and minor mode `opam-switch-mode' to
+;; select the opam switch via a menu bar menu.
+;;
+;; `opam-switch-set-switch' reads the name of the switch in the
+;; minibuffer, providing completion with all available switches. With
+;; no input (i.e., leaving the minibuffer empty) the environment is
+;; reset to the state before the first call of
+;; `opam-switch-set-switch'.
+;;
+;; The menu is generated each time the minor mode is enabled and
+;; contains the switches that are known at that time. If you create a
+;; new switch, re-enable the minor mode to get it added to the menu.
+;; The menu contains an additional entry "reset" to reset the
+;; environment to the state when emacs was started.
+;;
+;; For obvious reasons, `opam-switch-set-switch' does not change the
+;; switch of any other shell.
+;;
+;; 
+
+(require 'seq)
+
+;;; User options and variables
+
+(defgroup opam-switch-mode ()
+  "Customization for opam switch support in Emacs"
+  :group 'external)
+
+  
+(defcustom opsw--program-name "opam"
+  "Name or path of the opam binary."
+  :group 'opam-switch-mode
+  :type 'string)
+
+(defcustom opsw--common-options ()
+  "Options to be supplied to every opam invocation.
+This must be a list of strings, each member string an option
+accepted by opam."
+  :group 'opam-switch-mode
+  :type '(repeat string))
+
+(defcustom opsw--common-environment
+  '("OPAMUTF8=never"
+    "OPAMCOLOR=never"
+    "LC_ALL=C")
+  "Process environment to be set for every opam invocation.
+List of strings compatible with `process-environment', i.e., each
+element should have the form of ENVVARNAME=VALUE.
+
+The process environment must ensure that output is plain ascii
+without color, non-ascii arrow symbols and that it is in English.
+Otherwise parsing the output of opam commands won't work."
+  :group 'opam-switch-mode
+  :type '(repeat string))
+
+(defcustom opam-switch-change-opam-switch-hook nil
+  "Hook run when the opam switch changes.
+This is used, for instance, to let Proof General kill the coq
+background process when the opam switch changes."
+  :group 'opam-switch-mode
+  :type '(repeat function))
+  
+
+;;; Code
+
+(defun opsw--run-command-without-stderr (sub-cmd
+                                        &optional switch sexp
+                                        &rest args)
+  "Run opam SUB-CMD, without capturing error output.
+Run opam SUB-CMD with additional arguments and insert the output
+in the current buffer at point. Error output (stderr) is
+discarded. If SWITCH is not nil, an option \"--swith=SWITCH\" is
+added. If SEXP is t, option --sexep is added. All remaining
+arguments ARGS are added as arguments.
+
+Return exit status of the opam invocation.
+
+Internally this function uses `process-file' internally and will
+therfore respect file-name handlers specified via
+`default-directory'."
+  (let ((process-environment
+         (append opsw--common-environment process-environment))
+        (options (append args opsw--common-options)))
+    (when switch
+      (push (format "--switch=%s" switch) options))
+    (when sexp
+      (push "--sexp" options))
+    ;; (message "run %s %s %s" opsw--program-name sub-cmd options)
+    (apply 'process-file opsw--program-name
+               nil '(t nil) nil sub-cmd options)))
+
+(defun opsw--command-as-string (sub-cmd &optional switch sexp &rest args)
+  "Return output of opam SUB-CMD as string or nil.
+Same as `opsw--run-command-without-stderr' but return all output
+as string. Return nil if opam command fails."
+  (with-temp-buffer
+    (let ((status
+           (apply 'opsw--run-command-without-stderr sub-cmd switch sexp args)))
+      (if (eq status 0)
+          (buffer-string)
+        nil))))
+
+(defun opsw--get-root ()
+  "Get the opam root directory.
+This is the opam variable 'root'."
+  (let ((root (opsw--command-as-string "var" nil nil "root")))
+    (unless root
+      (error "opam var root failed"))
+    (when (eq (aref root (1- (length root))) ?\n)
+      (setq root (substring root 0 -1)))
+    root))
+
+(defconst opsw--root (opsw--get-root)
+  "The opam root directory.")
+
+;; Example output of opam switch. The warning is output on stderr.
+;;
+;; OPAMUTF8=never OPAMCOLOR=never LC_ALL=C opam switch
+;; #   switch        compiler                       description
+;; ->  4112-coq-812  ocaml-variants.4.11.2+flambda  4112-coq-812
+;;     44            ocaml-base-compiler.4.04.0
+;;     450-coq-8.9   ocaml-base-compiler.4.05.0     450-coq-8.9
+;;     471-no-coq    ocaml-base-compiler.4.07.1     471-no-coq
+;;     system        ocaml-system.4.01.0
+;;
+;; #   switch   compiler      description
+;; ->  default  ocaml.4.13.1  default
+;;
+;; [WARNING] The environment is not in sync with the current switch.
+;;           You should run: eval $(opam env)
+
+(defun opsw--get-switches ()
+  "Return all opam switches as list of strings."
+  (let (opam-switches)
+    (with-temp-buffer
+      (unless (eq (opsw--run-command-without-stderr "switch") 0)
+        ;; opam exit status different from 0 -- some error occured
+        (error "opam switch failed"))
+      (goto-char (point-min))
+      (forward-line)
+      (while (re-search-forward "^.. *\\([^ ]*\\).*$" nil t)
+        (push (match-string 1) opam-switches))
+      opam-switches)))
+
+(defvar opsw--switch-history nil
+  "Minibuffer history list for `opsw--set-switch'.")
+
+(defvar opsw--saved-env nil
+  "Saved environment variables, overwritten by an opam switch.
+This is a list of saved environment variables. Each saved
+variable is a list of two strings, the variable and the value.
+Set when the first chosen opam switch overwrites the
+environment.")
+
+(defvar opsw--saved-exec-path nil
+  "Saved value of `exec-path'.
+Set when the first chosen opam switch overwrites `exec-path'.")
+
+
+(defun opsw--save-current-env (opam-env)
+  "Save the current environment values relevant to opam.
+Argument OPAM-ENV, coming from calling `opam env', is only used
+to find the environment variables to save. `exec-path' is saved
+in addition to environment variables."
+  (setq opsw--saved-env
+	(mapcar (lambda (x) (list (car x) (getenv (car x)))) opam-env))
+  (setq opsw--saved-exec-path exec-path))
+  
+(defun opsw--set-env (opam-env)
+  "Sets a new opam environment.
+Environment variables in OPAM-ENV are put into the environment of
+the current Emacs session. `exec-path' is changed to match the
+environment PATH.
+
+It is unclear which value in `exec-path' corresponds to a
+previously set opam switch and also which entry in the PATH
+environment variable in OPAM-ENV corresponds to the new switch.
+Therefore this function uses the following heuristic. First all
+entries in `exec-path' that match `opsw--root' are deleted. Then,
+the first entry for PATH that maches `opsw--root' is added at the
+front of `exec-path'."
+  (let ((new-bin-dir
+         (seq-find
+          (lambda (dir) (string-prefix-p opsw--root dir))
+          (parse-colon-path (cadr (assoc "PATH" opam-env))))))
+    (unless new-bin-dir
+      (error "No opam-root directory in PATH"))
+    (mapc (lambda (x) (setenv (car x) (cadr x))) opam-env)
+    (setq exec-path
+          (seq-remove (lambda (dir) (string-prefix-p opsw--root dir)) exec-path))
+    (push new-bin-dir exec-path)))
+  
+(defun opsw--reset-env ()
+  "Reset process environment to the state before setting the first opam switch.
+Reset all environment variables and `exec-path' to the values
+they had in this emacs session before the first chosen opam
+switch overwrote them."
+  (mapc (lambda (x) (setenv (car x) (cadr x))) opsw--saved-env)
+  (setq exec-path opsw--saved-exec-path)
+  (setq opsw--saved-env nil)
+  (setq opsw--saved-exec-path nil))
+
+
+(defun opsw--get-current-switch ()
+  "Return name of current switch or \"<none>\"."
+  (let ((current-switch (getenv "OPAM_SWITCH_PREFIX")))
+    (if current-switch
+         (file-name-nondirectory current-switch)
+      "<none>")))
+
+(defun opsw--set-switch (switch-name)
+  "Chose and set an opam switch.
+Set opam switch SWITCH-NAME, which must be a valid opam switch
+name. When called interactively, the switch name must be entered
+in the minibuffer, which forces completion to a valid switch name
+or the empty string.
+
+Setting the opam switch for the first time inside emacs will save
+the current environment. Using the empty string for SWITCH-NAME
+will reset the environment to the saved values.
+
+The switch is set such that all process invocations from
+emacs respect the newly set opam switch. In addition to setting
+environment variables such as PATH and CAML_LD_LIBRARY_PATH, this
+also sets `exec-path', which controls emacs'
+subprocesses (`call-process', `make-process' and similar
+functions).
+
+When the switch is changed, `opam-switch-change-opam-switch-hook'
+runs. This a can be used to inform other modes that may run
+background processes that depend on the currently active opam
+switch.
+
+For obvious resons, `opsw--set-switch' will only affect emacs and
+not any other shells outside emacs."
+  (interactive
+   (let* ((switches (opsw--get-switches))
+          (current-switch (opsw--get-current-switch)))
+     (list
+      (completing-read
+       (format "current switch %s; switch to (empty to reset): " current-switch)
+       switches nil t "" 'opsw--switch-history nil))))
+  (when (and (equal switch-name "") (not opsw--saved-env))
+    (error "No saved opam environment, cannot reset."))
+  (if (equal switch-name "")
+      (opsw--reset-env)
+    (let ((output-string (opsw--command-as-string "env" switch-name t))
+          opam-env)
+      (unless output-string
+        (error
+         "opam env %s failed - probably because of invalid opam switch \"%s\""
+         switch-name switch-name))
+      (setq opam-env (car (read-from-string output-string)))
+      (unless opsw--saved-env
+        (opsw--save-current-env opam-env))
+      (opsw--set-env opam-env)))
+  (run-hooks 'opam-switch-change-opam-switch-hook))
+
+(defalias 'opam-switch-set-switch #'opsw--set-switch)
+
+;;; minor mode, keymap and menu
+
+(defvar opsw--mode-keymap (make-sparse-keymap)
+  "Keymap for `opam-switch-mode'")
+
+(defun opsw--menu-items ()
+  "Create list of opam switches as menu items for `easy-menu'."
+  (nconc
+   ;; first the current switch as info with a separator
+   '(["current switch: " nil
+      :active t
+      :suffix (opsw--get-current-switch)
+      :help "Shows the currently selected opam switch"]
+     "-------")
+   ;; then the list with all the real opam switches
+   (mapcar
+    (lambda (switch)
+      (vconcat
+       `(,switch
+         (opsw--set-switch ,switch)
+         :active t
+         :help ,(concat "select opam switch \"" switch "\""))))
+    (opsw--get-switches))
+   ;; now reset as last element
+   '(
+     ["reset" (opsw--set-switch "")
+      :active opsw--saved-env
+      :help "reset to state when emacs was started"]
+     )))
+
+(defun opsw--setup-opam-switch-mode ()
+  "Re-define menu for `opam-switch-mode'.
+This function runs when `opam-switch-mode' is enabled to setup
+`opam-switch-mode'. Currently it only redefines the menu.
+
+Note that the code for setting up the keymap and running the hook
+is automatically created by `define-minor-mode'."
+  (easy-menu-define
+    opsw--mode-menu
+    opsw--mode-keymap
+    "opam mode menu"
+    (cons "opam-switch"
+          (opsw--menu-items))))
+
+(define-minor-mode opam-switch-mode
+  "Toggle opam mode"
+  ;; init value - should be nil
+  nil
+  ;; lighter
+  " OPSW"
+  ;; keymap
+  opsw--mode-keymap
+  :group 'opam-switch-mode
+  ;; body
+  (when opam-switch-mode
+    (opsw--setup-opam-switch-mode)))
+
+(provide 'opam-switch-mode)
+#+end_src
+
+*** Coq setup
 #+BEGIN_SRC emacs-lisp
 (exec-path-from-shell-initialize)
 
 ;; (setq coq-prog-name "~/.opam/4.11.1/bin/coqtop")
 ;; (setq coq-prog-name "~/.opam/4.07.1+flambda/bin/coqtop")
 ;; (setq coq-prog-name "~/.opam/4.05.0/bin/coqtop")
-(setq coq-prog-name "~/.opam/default/bin/coqtop")
-;; (setq coq-prog-name "coqtop")
+;; (setq coq-prog-name "~/.opam/default/bin/coqtop")
+;; (setq coq-prog-name "~/.opam/default/bin/coqtop")
+;; (setq coq-prog-name "~/.opam/hacspec_coq/bin/coqtop")
+
+(defun find-prog-name (prog)
+  (let* ((command (concat "type -p " prog))
+         (output (shell-command-to-string command)))
+    (replace-regexp-in-string "\n" "" output)))
+
+(defun coq-update-bins ()
+  "Update Coq binaries based on the current PATH"
+  (interactive)
+  (setq coq-compiler (find-prog-name "coqc"))
+  (setq coq-prog-name (find-prog-name "coqtop"))
+  (setq coq-dependency-analyzer (find-prog-name "coqdep"))
+  (when (proof-shell-available-p) (proof-shell-exit)))
+
+(defun coq-opam-env ()
+  "Run \"opam env\" and update Coq binaries"
+  (interactive)
+  (opam-env)
+  (coq-update-bins))
 
 ;; Load company-coq when opening Coq files
 (add-hook 'coq-mode-hook #'company-coq-mode)
@@ -1296,3 +1462,28 @@ create one.  Return the initialized session."
   (sit-for 0.1)
   (get-buffer org-babel-coq-buffer))	;
 #+end_src
+** GO
+#+begin_src elisp
+;; (add-to-list 'load-path "/place/where/you/put/it/")
+(autoload 'go-mode "go-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+#+end_src
+* Git / Version control
+** Magit
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
+
+  (setq magit-bury-buffer-function
+	(lambda (con)
+	  (kill-buffer)
+	  (delete-window)))
+#+END_SRC
+* LSP
+** Rust
+#+BEGIN_SRC emacs-lisp
+  (setq lsp-rust-server 'rust-analyzer)
+#+END_SRC
+
+
+
+
