@@ -1,13 +1,7 @@
 * What to write in the .emacs file:
 #+BEGIN_SRC emacs-lisp :tangle no
-  (require 'org)
-  (org-babel-load-file (expand-file-name "~/Documents/.emacs/init.org"))
-
-  (require 'package)
-  (add-to-list 'package-archieves '("melpa" . "https://melpa.org/packages/") t)
-  (package-initialize)
-
-  (add-to-list 'package-archieves '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(require 'org)
+(org-babel-load-file (expand-file-name "~/Documents/.emacs/init.org"))
 #+END_SRC
 
 * Better start
@@ -29,13 +23,16 @@
 
 (setq debug-on-error 1) ;; Show backtrace on emacs lisp error
 #+END_SRC
+* Using Emacs
+C-h m -- show current modes
 * Ubuntu installs
 #+BEGIN_SRC bash :tangle no
-  sudo apt install texlive-full
-  sudo apt install opam
-  opam install coq
+sudo apt install texlive-full
+sudo apt install opam
+opam install coq
 
-  gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
+gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
+sudo apt-get install clangd-12 # LSP mode
 #+END_SRC
 ** Printer setup
 You are going to install following packages.
@@ -46,7 +43,7 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
 #+BEGIN_SRC emacs-lisp
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; (package-initialize)
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -70,13 +67,14 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
    scala-mode
    haskell-mode
    proof-general
-   smartparens))
+   smartparens
+   exec-path-from-shell))
 #+END_SRC
 * Looks
 ** Theme
 #+BEGIN_SRC emacs-lisp
-  (load-theme 'wheatgrass)
-  ;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
+(load-theme 'wheatgrass)
+;; alternatives: manoj-dark  ,  tango-dark  ,  tsdh-dark  ,  wheatgrass  , wombat
 #+END_SRC
 ** Pretty symbol modes
 #+BEGIN_SRC emacs-lisp
@@ -190,7 +188,7 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
 * Util
 ** Display Batery Mode
 #+BEGIN_SRC emacs-lisp
-  (display-battery-mode 1)
+;; (display-battery-mode 1) ;; does not work on computer without battery
 #+END_SRC
 
 ** CEDETs
@@ -627,9 +625,43 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
   ;; TODO: add yas-mode so rustic does not complain on auto-complete
   (setq rust-format-on-save t)
 #+END_SRC
+** C++ - Clangd
+#+BEGIN_SRC emacs-lisp
+;; (setq package-selected-packages '(lsp-mode yasnippet lsp-treemacs ;; helm-lsp
+;;     projectile hydra flycheck company avy which-key ;; helm-xref
+;;     dap-mode))
+
+;; (when (cl-find-if-not #'package-installed-p package-selected-packages)
+;;   (package-refresh-contents)
+;;   (mapc #'package-install package-selected-packages))
+
+;; sample `helm' configuration use https://github.com/emacs-helm/helm/ for details
+;; (helm-mode)
+;; (require 'helm-xref)
+;; (define-key global-map [remap find-file] #'helm-find-files)
+;; (define-key global-map [remap execute-extended-command] #'helm-M-x)
+;; (define-key global-map [remap switch-to-buffer] #'helm-mini)
+
+;; (which-key-mode)
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(setq gc-cons-threshold (* 100 1024 1024)
+      read-process-output-max (* 1024 1024)
+      treemacs-space-between-root-nodes nil
+      company-idle-delay 0.0
+      company-minimum-prefix-length 1
+      lsp-idle-delay 0.1)  ;; clangd is fast
+
+;; (with-eval-after-load 'lsp-mode
+;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+;;   (require 'dap-cpptools)
+;;   (yas-global-mode))
+#+END_SRC
+
 ** Coq
 #+begin_src emacs-lisp
-(load "~/.emacs.d/lisp/PG/generic/proof-site")
+;; (load "~/.emacs.d/lisp/PG/generic/proof-site")
 (setq proof-assistant "Coq")
 ;; (load "/home/au538501/.emacs.d/elpa/proof-general-20220525.1052/coq/coq")
 
@@ -1506,4 +1538,7 @@ create one.  Return the initialized session."
 
 
 
+
+* Guides
+https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
 
