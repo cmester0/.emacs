@@ -2,6 +2,13 @@
 #+BEGIN_SRC emacs-lisp :tangle no
 (require 'org)
 (org-babel-load-file (expand-file-name "~/Documents/.emacs/init.org"))
+
+(require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archieves '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+
+(add-to-list 'package-archieves '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 * Better start
@@ -33,6 +40,7 @@ opam install coq
 
 gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
 sudo apt-get install clangd-12 # LSP mode
+// TODO: https://nixos.org/
 #+END_SRC
 ** Printer setup
 You are going to install following packages.
@@ -41,6 +49,7 @@ You are going to install following packages.
 Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=hl1210w_eu_as
 * Install missing packages
 #+BEGIN_SRC emacs-lisp
+(require 'use-package)
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; (package-initialize)
@@ -53,7 +62,7 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
      (package-install package)))
  '(auctex
    sml-mode
-   magit
+   ;; magit
    ;; multiple-cursors
    rainbow-delimiters
    ;; tuareg
@@ -324,61 +333,65 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 
 ** Smart mode line
 #+begin_src emacs-lisp
-  (setq sml/no-confirm-load-theme t)
+(setq sml/no-confirm-load-theme t)
 
-  (sml/setup)
-  ;; (setq sml/theme 'dark)
-  (setq sml/theme 'light)
-  ;; (setq sml/theme 'respectful)
+(sml/setup)
+;; (setq sml/theme 'dark)
+(setq sml/theme 'light)
+;; (setq sml/theme 'respectful)
 #+end_src
 
 ** Modes
 *** Org mode
 #+BEGIN_SRC emacs-lisp
-  ;; Basics
-  (custom-set-faces
-   '(org-level-1 ((t (:foreground "purple1"))))
-   '(org-level-2 ((t (:foreground "red1"))))
-   '(org-level-3 ((t (:foreground "orange1"))))
-   '(org-level-4 ((t (:foreground "yellow1"))))
-   '(org-level-5 ((t (:foreground "green1"))))
-   '(org-level-6 ((t (:foreground "cyan1"))))
-   '(org-level-7 ((t (:foreground "blue1"))))
-   '(org-level-8 ((t (:foreground "magenta1"))))
-   '(org-block ((t (:foreground "gray70" :background "gray10")))) ; ((t (:inherit 'shadow))) (gray70)
-   '(org-default ((t (:inherit 'default))))
-   '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
-   '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
-   '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
-   )
+;; Basics
+(custom-set-faces
+ '(org-level-1 ((t (:foreground "purple1"))))
+ '(org-level-2 ((t (:foreground "red1"))))
+ '(org-level-3 ((t (:foreground "orange1"))))
+ '(org-level-4 ((t (:foreground "yellow1"))))
+ '(org-level-5 ((t (:foreground "green1"))))
+ '(org-level-6 ((t (:foreground "cyan1"))))
+ '(org-level-7 ((t (:foreground "blue1"))))
+ '(org-level-8 ((t (:foreground "magenta1"))))
+ '(org-block ((t (:foreground "gray70" :background "gray10")))) ; ((t (:inherit 'shadow))) (gray70)
+ '(org-default ((t (:inherit 'default))))
+ '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+ '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
+ '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
+ )
 #+END_SRC
 
 *** Agda mode
 #+BEGIN_SRC emacs-lisp
-  (custom-set-faces
-   '(agda2-highlight-keyword-face ((t (:foreground "magenta"))))
-   '(agda2-highlight-catchall-clause-face ((t (:foreground "dark olive green"))))
-   '(agda2-highlight-unsolved-meta-face ((t (:background "dark goldenrod"))))
-   '(agda2-highlight-unsolved-constraint-face ((t (:background "olive green"))))
-   '(agda2-highlight-typechecks-face ((t (:background "dark olive green"))))
-   '(agda2-highlight-catchal-clause-face ((t (:background "dark red"))))
-   '(agda2-highlight-coverage-problem-face ((t (:background "dark red"))))
-   '(agda2-highlight-bound-variable-face ((t (:foreground "green"))))
-   '(agda2-highlight-datatype-face ((t (:foreground "blue"))))
-   '(agda2-highlight-function-face ((t (:foreground "cyan"))))
-   '(agda2-highlight-inductive-constructor-face ((t (:foreground "Orange"))))
-   '(agda2-highlight-module-face ((t (:foreground "controlLightHighlightColor"))))
-   '(agda2-highlight-number-face ((t (:foreground "Orange"))))
-   '(agda2-highlight-operator-face ((t (:foreground "Green"))))
-   '(agda2-highlight-postulate-face ((t (:foreground "Orange"))))
-   '(agda2-highlight-primitive-face ((t (:foreground "Orange"))))
-   '(agda2-highlight-primitive-type-face ((t (:foreground "cyan"))))
-   '(agda2-highlight-record-face ((t (:foreground "keyboardFocusIndicatorColor"))))
-   '(agda2-highlight-string-face ((t (:foreground "green"))))
-   '(agda2-highlight-termination-problem-face ((t (:background "Red4"))))
-   '(agda2-highlight-field-face ((t (:foreground "magenta")))))
+(custom-set-faces
+ '(agda2-highlight-keyword-face ((t (:foreground "magenta"))))
+ '(agda2-highlight-catchall-clause-face ((t (:foreground "dark olive green"))))
+ '(agda2-highlight-unsolved-meta-face ((t (:background "dark goldenrod"))))
+ '(agda2-highlight-unsolved-constraint-face ((t (:background "olive green"))))
+ '(agda2-highlight-typechecks-face ((t (:background "dark olive green"))))
+ '(agda2-highlight-catchal-clause-face ((t (:background "dark red"))))
+ '(agda2-highlight-coverage-problem-face ((t (:background "dark red"))))
+ '(agda2-highlight-bound-variable-face ((t (:foreground "green"))))
+ '(agda2-highlight-datatype-face ((t (:foreground "blue"))))
+ '(agda2-highlight-function-face ((t (:foreground "cyan"))))
+ '(agda2-highlight-inductive-constructor-face ((t (:foreground "Orange"))))
+ '(agda2-highlight-module-face ((t (:foreground "controlLightHighlightColor"))))
+ '(agda2-highlight-number-face ((t (:foreground "Orange"))))
+ '(agda2-highlight-operator-face ((t (:foreground "Green"))))
+ '(agda2-highlight-postulate-face ((t (:foreground "Orange"))))
+ '(agda2-highlight-primitive-face ((t (:foreground "Orange"))))
+ '(agda2-highlight-primitive-type-face ((t (:foreground "cyan"))))
+ '(agda2-highlight-record-face ((t (:foreground "keyboardFocusIndicatorColor"))))
+ '(agda2-highlight-string-face ((t (:foreground "green"))))
+ '(agda2-highlight-termination-problem-face ((t (:background "Red4"))))
+ '(agda2-highlight-field-face ((t (:foreground "magenta")))))
 #+END_SRC
 
+*** Company/Coq mode
+#+begin_src emacs-lisp
+(custom-set-faces '(company-coq-coqdoc-h1-face ((t (:foreground "magenta")))))
+#+end_src
 * Flycheck
 #+BEGIN_SRC emacs-lisp
 ;; (global-flycheck-mode)
@@ -390,59 +403,59 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 ** LaTeX
 ** AUCTEX
 #+BEGIN_SRC emacs-lisp
-  ;; AUC-TEX
+;; AUC-TEX
 
-  ;; Only change sectioning colour
-  (setq font-latex-fontify-sectioning 'color)
-  ;; super-/sub-script on baseline
-  (setq font-latex-script-display (quote (nil)))
-  ;; Do not change super-/sub-script font
+;; Only change sectioning colour
+(setq font-latex-fontify-sectioning 'color)
+;; super-/sub-script on baseline
+(setq font-latex-script-display (quote (nil)))
+;; Do not change super-/sub-script font
 
-  ;; Exclude bold/italic from keywords
-  (setq font-latex-deactivated-keyword-classes
-	'("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
+;; Exclude bold/italic from keywords
+(setq font-latex-deactivated-keyword-classes
+      '("italic-command" "bold-command" "italic-declaration" "bold-declaration"))
 
-  ;; More recommended setup
-  ;; (setq TeX-auto-save t)
-  ;; (setq TeX-parse-self t)
-  ;; (setq-default TeX-master nil)
+;; More recommended setup
+;; (setq TeX-auto-save t)
+;; (setq TeX-parse-self t)
+;; (setq-default TeX-master nil)
 
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  ;; (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-  ;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+;; (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+;; (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
-  ;; (setq reftex-plug-into-AUCTeX t)
+;; (setq reftex-plug-into-AUCTeX t)
 
-  ;; Look into CDLaTeX
+;; Look into CDLaTeX
 
-  ;; Preview LaTeX
-  ;; (add-hook 'LaTeX-mode-hook 'preview-cache-preamble)
+;; Preview LaTeX
+;; (add-hook 'LaTeX-mode-hook 'preview-cache-preamble)
 
-  (load "auctex.el" nil t t)
+(load "auctex.el" nil t t)
 
-  (setq preview-auto-cache-preamble t)
+(setq preview-auto-cache-preamble t)
 
-  ;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
+;; (add-hook 'LaTeX-mode-hook (kbd "C-c C-p C-b"))
 
-  ;; TEX ENGINE:
-  ;; (setq-default TeX-engine 'xetex)
-  (setq-default TeX-engine 'default)
+;; TEX ENGINE:
+;; (setq-default TeX-engine 'xetex)
+(setq-default TeX-engine 'default)
 
 
-  ;; Latex math font:
-  ;; (custom-set-faces
-  ;;  '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
+;; Latex math font:
+;; (custom-set-faces
+;;  '(font-latex-math-face ((t (:family "FreeMono" :height 1.0 :weight bold :foreground "dark khaki")))))
 
-  ;; Latin Modern Math, Computer Modern
-  ;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
-  ;; Best fonts: fixed, TeX Gyre DejaVu Math, Ubuntu Mono, Latin Modern Mono, Go Mono, Noto Sans Mono, Mitra Mono, Liberation Mono
-  ;; My Choice: TeX Gyre DejaVu Math, FreeMono
+;; Latin Modern Math, Computer Modern
+;; Good fonts: STIX General, STIX Mono, DejaVu Sans Mono, ETA, ETA Mono, Source Code Pro, Roboto Mono,
+;; Best fonts: fixed, TeX Gyre DejaVu Math, Ubuntu Mono, Latin Modern Mono, Go Mono, Noto Sans Mono, Mitra Mono, Liberation Mono
+;; My Choice: TeX Gyre DejaVu Math, FreeMono
 
-  ;; To see all fonts, uncomment and press C-j the following line:
-  ;; (font-family-list)
+;; To see all fonts, uncomment and press C-j the following line:
+;; (font-family-list)
 
-  ;; Start in math mode
-  (add-hook 'LaTeX-mode-hook 'latex-math-mode)
+;; Start in math mode
+(add-hook 'LaTeX-mode-hook 'latex-math-mode)
 #+END_SRC
 
 ** BEAMER
@@ -618,12 +631,21 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 
 ** Rust
 #+BEGIN_SRC emacs-lisp
-  (add-hook 'rust-mode-hook
-	    (lambda () (setq indent-tabs-mode nil)))
-  (add-hook 'rust-mode-hook 'yas-minor-mode)
+(add-hook 'rust-mode-hook
+	  (lambda () (setq indent-tabs-mode nil)))
+(add-hook 'rust-mode-hook 'yas-minor-mode)
+;; (add-hook 'rust-mode-hook
+;;           (lambda () (prettify-symbols-mode)))
+;; TODO: add yas-mode so rustic does not complain on auto-complete
+(setq rust-format-on-save t)
+#+END_SRC
 
-  ;; TODO: add yas-mode so rustic does not complain on auto-complete
-  (setq rust-format-on-save t)
+#+BEGIN_SRC emacs-lisp
+;; (defun rustic-mode-auto-save-hook ()
+;;   "Enable auto-saving in rustic-mode buffers."
+;;   (when buffer-file-name
+;;     (setq-local compilation-ask-about-save nil)))
+;; (add-hook 'rustic-mode-hook 'rustic-mode-auto-save-hook)
 #+END_SRC
 ** C++ - Clangd
 #+BEGIN_SRC emacs-lisp
@@ -666,6 +688,8 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 ;; (load "/home/au538501/.emacs.d/elpa/proof-general-20220525.1052/coq/coq")
 
 (setq proof-splash-enable nil)
+(custom-set-variables
+ '(proof-three-window-mode-policy 'hybrid))
 #+end_src
 
 *** opam switch
@@ -1520,25 +1544,64 @@ create one.  Return the initialized session."
 (autoload 'go-mode "go-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
 #+end_src
+** Ocaml
+#+begin_src elisp
+(add-to-list 'load-path "/home/au538501/.opam/hacspec-v2/share/emacs/site-lisp")
+(require 'ocp-indent)
+#+end_src
 * Git / Version control
 ** Magit
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
-
-  (setq magit-bury-buffer-function
-	(lambda (con)
-	  (kill-buffer)
-	  (delete-window)))
+;; (global-set-key (kbd "C-x g") 'magit-status) ;; Shows commit status
+;; (setq magit-bury-buffer-function
+;;       (lambda (con)
+;; 	(kill-buffer)
+;; 	(delete-window)))
 #+END_SRC
 * LSP
 ** Rust
 #+BEGIN_SRC emacs-lisp
-  (setq lsp-rust-server 'rust-analyzer)
+(setq lsp-rust-server 'rust-analyzer)
+;; (add-hook 'rust-mode-hook #'lsp)
 #+END_SRC
-
-
-
 
 * Guides
 https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
+** Grammerly
+#+begin_src emacs-lisp
+;; (use-package lsp-grammarly
+;;   :ensure t
+;;   :hook (text-mode . (lambda ()
+;;                        (require 'lsp-grammarly)
+;;                        (lsp))))  ; or lsp-deferred
+#+end_src
+* Languagetool
+#+begin_src emacs-lisp
+(use-package languagetool
+  :ensure t
+  :defer t
+  :commands (languagetool-check
+             languagetool-clear-suggestions
+             languagetool-correct-at-point
+             languagetool-correct-buffer
+             languagetool-set-language
+             languagetool-server-mode
+             languagetool-server-start
+             languagetool-server-stop)
+  :config
+  (setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-console-command "/snap/languagetool/current/usr/bin/languagetool-commandline.jar"
+        languagetool-server-command "/snap/languagetool/current/usr/bin/languagetool-server.jar"))
 
+(use-package flycheck-languagetool
+  :ensure t
+  :hook (text-mode . flycheck-languagetool-setup)
+  :init
+  (setq flycheck-languagetool-server-jar "/snap/languagetool/current/usr/bin/languagetool-server.jar"))
+#+end_src
+* Evil
+#+begin_src emacs-lisp
+;; ;; Enable Evil
+;; (require 'evil)
+;; (evil-mode 1)
+#+end_src
