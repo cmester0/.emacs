@@ -41,6 +41,7 @@ opam install coq
 gsettings set org.freedesktop.ibus.panel.emoji hotkey "[]" # removes weird ctrl . and ctrl shift u interactions.
 sudo apt-get install clangd-12 # LSP mode
 // TODO: https://nixos.org/
+sudo apt-get install fonts-noto
 #+END_SRC
 ** Printer setup
 You are going to install following packages.
