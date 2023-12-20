@@ -1550,6 +1550,7 @@ create one.  Return the initialized session."
 (add-to-list 'load-path "/home/au538501/.opam/hacspec-v2/share/emacs/site-lisp")
 (require 'ocp-indent)
 #+end_src
+
 * Git / Version control
 ** Magit
 #+BEGIN_SRC emacs-lisp
@@ -1559,6 +1560,7 @@ create one.  Return the initialized session."
 ;; 	(kill-buffer)
 ;; 	(delete-window)))
 #+END_SRC
+
 * LSP
 ** Rust
 #+BEGIN_SRC emacs-lisp
