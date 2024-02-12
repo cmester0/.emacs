@@ -3,12 +3,12 @@
 (require 'org)
 (org-babel-load-file (expand-file-name "~/Documents/.emacs/init.org"))
 
-(require 'package)
-(setq package-enable-at-startup nil)
-(add-to-list 'package-archieves '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
+;; (require 'package)
+;; (setq package-enable-at-startup nil)
+;; (add-to-list 'package-archieves '("melpa" . "https://melpa.org/packages/") t)
+;; (package-initialize)
 
-(add-to-list 'package-archieves '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (add-to-list 'package-archieves '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 #+END_SRC
 
 * Better start
@@ -29,6 +29,10 @@
 (column-number-mode 1) ;; Show column number
 
 (setq debug-on-error 1) ;; Show backtrace on emacs lisp error
+
+;; Relative scrolling
+(setq scroll-conservatively 100)
+(setq scroll-margin 7)
 #+END_SRC
 * Using Emacs
 C-h m -- show current modes
@@ -359,7 +363,7 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
  '(org-default ((t (:inherit 'default))))
  '(org-block-begin-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
  '(org-block-end-line ((t (:foreground "dim gray")))) ; ((t (:inherit 'org-meta-line)))
- '(org-meta-line ((t (:foreground "red4")))) ;; (:inherit 'font-lock-comment-face)
+ '(org-meta-line ((t (:foreground "red3")))) ;; (:inherit 'font-lock-comment-face)
  )
 #+END_SRC
 
@@ -461,106 +465,112 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 
 ** BEAMER
 #+BEGIN_SRC emacs-lisp
-  ;; allow for export=>beamer by placing
+(require 'org-tree-slide) ;; Allow slides from within beamer with M-x org-tree-slide-mode
 
-  ;; #+LaTeX_CLASS: beamer in org files
-  (unless (boundp 'org-export-latex-classes)
-    (setq org-export-latex-classes nil))
+;; allow for export=>beamer by placing
+
+;; #+LaTeX_CLASS: beamer in org files
+(unless (boundp 'org-export-latex-classes)
+  (setq org-export-latex-classes nil))
+(add-to-list 'org-export-latex-classes
+  ;; beamer class, for presentations
+  '("beamer"
+     "\\documentclass[11pt]{beamer}\n
+      \\mode<{{{beamermode}}}>\n
+      \\usetheme{{{{beamertheme}}}}\n
+      \\usecolortheme{{{{beamercolortheme}}}}\n
+      \\beamertemplateballitem\n
+      \\setbeameroption{show notes}
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{hyperref}\n
+      \\usepackage{color}
+      \\usepackage{listings}
+      \\lstset{numbers=none,language=[ISO]C++,tabsize=4,
+  frame=single,
+  basicstyle=\\small,
+  showspaces=false,showstringspaces=false,
+  showtabs=false,
+  keywordstyle=\\color{blue}\\bfseries,
+  commentstyle=\\color{red},
+  }\n
+      \\usepackage{verbatim}\n
+      \\institute{{{{beamerinstitute}}}}\n
+       \\subject{{{{beamersubject}}}}\n"
+
+     ("\\section{%s}" . "\\section*{%s}")
+
+     ("\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}"
+       "\\begin{frame}[fragile]\\frametitle{%s}"
+       "\\end{frame}")))
+
+  ;; letter class, for formal letters
+
   (add-to-list 'org-export-latex-classes
-    ;; beamer class, for presentations
-    '("beamer"
-       "\\documentclass[11pt]{beamer}\n
-	\\mode<{{{beamermode}}}>\n
-	\\usetheme{{{{beamertheme}}}}\n
-	\\usecolortheme{{{{beamercolortheme}}}}\n
-	\\beamertemplateballitem\n
-	\\setbeameroption{show notes}
-	\\usepackage[utf8]{inputenc}\n
-	\\usepackage[T1]{fontenc}\n
-	\\usepackage{hyperref}\n
-	\\usepackage{color}
-	\\usepackage{listings}
-	\\lstset{numbers=none,language=[ISO]C++,tabsize=4,
-    frame=single,
-    basicstyle=\\small,
-    showspaces=false,showstringspaces=false,
-    showtabs=false,
-    keywordstyle=\\color{blue}\\bfseries,
-    commentstyle=\\color{red},
-    }\n
-	\\usepackage{verbatim}\n
-	\\institute{{{{beamerinstitute}}}}\n
-	 \\subject{{{{beamersubject}}}}\n"
 
-       ("\\section{%s}" . "\\section*{%s}")
+  '("letter"
+     "\\documentclass[11pt]{letter}\n
+      \\usepackage[utf8]{inputenc}\n
+      \\usepackage[T1]{fontenc}\n
+      \\usepackage{color}"
 
-       ("\\begin{frame}[fragile]\\frametitle{%s}"
-	 "\\end{frame}"
-	 "\\begin{frame}[fragile]\\frametitle{%s}"
-	 "\\end{frame}")))
-
-    ;; letter class, for formal letters
-
-    (add-to-list 'org-export-latex-classes
-
-    '("letter"
-       "\\documentclass[11pt]{letter}\n
-	\\usepackage[utf8]{inputenc}\n
-	\\usepackage[T1]{fontenc}\n
-	\\usepackage{color}"
-
-       ("\\section{%s}" . "\\section*{%s}")
-       ("\\subsection{%s}" . "\\subsection*{%s}")
-       ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-       ("\\paragraph{%s}" . "\\paragraph*{%s}")
-       ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+     ("\\section{%s}" . "\\section*{%s}")
+     ("\\subsection{%s}" . "\\subsection*{%s}")
+     ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+     ("\\paragraph{%s}" . "\\paragraph*{%s}")
+     ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 #+END_SRC
 
 ** Org mode
 #+BEGIN_SRC emacs-lisp
-  (setq org-startup-folded t)
-  (add-hook 'org-mode-hook 'org-hide-block-all)
-  (add-hook 'org-mode-hook (lambda () (setq-local word-wrap nil)))
-  (setq org-startup-truncated t) ;; non-nil for truncated
+(setq org-startup-folded t)
+(add-hook 'org-mode-hook 'org-hide-block-all)
+(add-hook 'org-mode-hook (lambda () (setq-local word-wrap nil)))
+(setq org-startup-truncated t) ;; non-nil for truncated
 
-  (org-babel-do-load-languages
-   'org-babel-load-languages '((latex . t)
-			       (C . t)
-			       (org . t)
-			       (python . t)
-			       (shell . t)
-			       ;; (coq . nil)
-			       ))
+;; (add-to-list 'org-babel-default-header-args '(:eval . "never-export"))
 
-  ;; (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
+(org-babel-do-load-languages
+ 'org-babel-load-languages '((latex . t)
+			     (C . t)
+			     (org . t)
+			     (python . t)
+			     (shell . t)
+			     ;; (coq . nil)
+			     ))
 
-  (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s")) ;; xdg-open
-  (require 'ox-beamer)
-  ;; (add-to-list 'org-export-backends 'beamer)
+;; (setq org-confirm-babel-evaluate nil) ;; Maybe bad idea
 
-  ;; (setq org-latex-listings 'minted)
-  ;; (setq org-latex-packages-alist '(("" "minted")))
-  ;; (add-to-list 'org-latex-packages-alist '("" "fullpage"))
-  ;; (add-to-list 'org-latex-packages-alist '("" "color"))
+(add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s")) ;; xdg-open
 
-  ;; (setq org-latex-minted-options
-  ;; 	'(("linenos") ("breaklines")))
+(require 'ox-beamer)
+;; (add-to-list 'org-export-backends 'beamer)
 
-  (setq org-latex-to-pdf-process
-	'("pdflatex -shell-escape -interaction nonstopmode %f"
-	  "pdflatex -shell-escape -interaction nonstopmode %f"))
-  ;; '("xelatex -interaction nonstopmode %f"
-  ;;   "xelatex -interaction nonstopmode %f")
+(setq org-latex-listings t)
+;; (setq org-latex-listings 'minted)
+;; (setq org-latex-packages-alist '(("" "minted")))
+;; (add-to-list 'org-latex-packages-alist '("" "fullpage"))
+;; (add-to-list 'org-latex-packages-alist '("" "color"))
 
-  ;; fontify code in code blocks
-  (setq org-src-fontify-natively t)
-  (setq org-src-tab-acts-natively t)
-  (setq org-src-preserve-indentation nil 
-	org-edit-src-content-indentation 0)
+;; (setq org-latex-minted-options
+;; 	'(("linenos") ("breaklines")))
 
-  (setq org-confirm-babel-evaluate 'nil)
+(setq org-latex-to-pdf-process
+      '("pdflatex -shell-escape -interaction nonstopmode %f"
+	"pdflatex -shell-escape -interaction nonstopmode %f"))
+;; '("xelatex -interaction nonstopmode %f"
+;;   "xelatex -interaction nonstopmode %f")
 
-  (add-to-list 'org-src-lang-modes '("toml" . "conf-toml"))
+;; fontify code in code blocks
+(setq org-src-fontify-natively t)
+(setq org-src-tab-acts-natively t)
+(setq org-src-preserve-indentation nil 
+      org-edit-src-content-indentation 0)
+
+(setq org-confirm-babel-evaluate 'nil)
+
+(add-to-list 'org-src-lang-modes '("toml" . "conf-toml"))
 #+END_SRC
 
 #+begin_src emacs-lisp
@@ -1567,17 +1577,34 @@ create one.  Return the initialized session."
 (setq lsp-rust-server 'rust-analyzer)
 ;; (add-hook 'rust-mode-hook #'lsp)
 #+END_SRC
+** Grammerly
+# https://github.com/emacs-grammarly/grammarly-language-server
+#+begin_src bash :tangle no
+npm config set prefix ~/.npm-packages # configure it to install "globally installed packages"
+npm install -g @emacs-grammarly/grammarly-languageserver # install the grammarly languageserver
+#+end_src
+install an emacs frontend for the server from https://github.com/emacs-grammarly
+# Grammarly-ls
+
+# Grammarly describe: s-l h h
+# Grammarly action: s-l a a
+
+# s-
+# C-x @ s
+
+# h-
+# C-x @ h
+
+#+begin_src emacs-lisp
+(use-package lsp-grammarly
+  :ensure t
+  :hook (text-mode . (lambda ()
+                       (require 'lsp-grammarly)
+                       (lsp))))  ; or lsp-deferred
+#+end_src
 
 * Guides
 https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
-** Grammerly
-#+begin_src emacs-lisp
-;; (use-package lsp-grammarly
-;;   :ensure t
-;;   :hook (text-mode . (lambda ()
-;;                        (require 'lsp-grammarly)
-;;                        (lsp))))  ; or lsp-deferred
-#+end_src
 * Languagetool
 #+begin_src emacs-lisp
 (use-package languagetool
@@ -1607,4 +1634,35 @@ https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
 ;; ;; Enable Evil
 ;; (require 'evil)
 ;; (evil-mode 1)
+
+;; Visual line numbers
+(setq-default display-line-numbers 'visual
+              display-line-numbers-widen 'nil
+              ;; this is the default
+              display-line-numbers-current-absolute t)
+
+(setq display-line-numbers-width 4)
+
+(defun noct-relative ()
+  "Show relative line numbers."
+  (setq-local display-line-numbers 'visual))
+
+(defun noct-absolute ()
+  "Show absolute line numbers."
+  (setq-local display-line-numbers t))
+
+(add-hook 'evil-insert-state-entry-hook #'noct-relative)
+(add-hook 'evil-insert-state-exit-hook #'noct-relative)
+
+;; example of customizing colors
+(custom-set-faces '(line-number-current-line ((t :weight bold
+                                                 :foreground "goldenrod"
+                                                 :background "slate gray"))))
+
+;; (setq evil-emacs-state-modes nil)
+;; (setq evil-insert-state-modes nil)
+;; (setq evil-motion-state-modes nil)
+;; (setq evil-mode-line-format nil
+;;       evil-insert-state-cursor '(bar "White")
+;;       evil-visual-state-cursor '(box "#F86155"))
 #+end_src
