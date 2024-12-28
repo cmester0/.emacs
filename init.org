@@ -28,7 +28,7 @@
 (line-number-mode 1)   ;; Show line number
 (column-number-mode 1) ;; Show column number
 
-(setq debug-on-error 1) ;; Show backtrace on emacs lisp error
+;; (setq debug-on-error 1) ;; Show backtrace on emacs lisp error
 
 ;; Relative scrolling
 (setq scroll-conservatively 100)
@@ -208,33 +208,33 @@ Check link: https://support.brother.com/g/b/downloadtop.aspx?c=dk&lang=da&prod=h
 ** CEDETs
 *** Semantic
 #+BEGIN_SRC emacs-lisp
-  (require 'cc-mode)
-  (require 'semantic)
+;; (require 'cc-mode)
+;; (require 'semantic)
 
-  (semantic-mode 1)
+;; (semantic-mode 1)
 
-  ;; (global-semantic-idle-completions-mode) ;; AUTO-COMPLETE
+;; ;; (global-semantic-idle-completions-mode) ;; AUTO-COMPLETE
 
-  (semantic-add-system-include "~/linux/kernel")
-  (semantic-add-system-include "~/linux/include")
+;; (semantic-add-system-include "~/linux/kernel")
+;; (semantic-add-system-include "~/linux/include")
 
-  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
-  (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode) ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
-  (add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode) ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)  ;; COMMENT OUT
-  (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)  ;; COMMENT OUT
+;; (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-mru-bookmark-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semanticdb-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-idle-scheduler-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-stickyfunc-mode) ;; COMMENT OUT
+;; (add-to-list 'semantic-default-submodes 'global-cedet-m3-minor-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-highlight-func-mode)
+;; (add-to-list 'semantic-default-submodes 'global-semantic-show-unmatched-syntax-mode) ;; COMMENT OUT
+;; (add-to-list 'semantic-default-submodes 'global-semantic-highlight-edits-mode)  ;; COMMENT OUT
+;; (add-to-list 'semantic-default-submodes 'global-semantic-show-parser-state-mode)  ;; COMMENT OUT
 
-  (require 'semantic/ia)
-  (require 'semantic/bovine/c)
-  (require 'semantic/bovine/gcc)
+;; (require 'semantic/ia)
+;; (require 'semantic/bovine/c)
+;; (require 'semantic/bovine/gcc)
 
-  (setq semantic-complete-inline-analyzer-displayor-class
-	'semantic-displayor-ghost)
+;; (setq semantic-complete-inline-analyzer-displayor-class
+;;       'semantic-displayor-ghost)
 #+END_SRC
 
 *** EDE
@@ -406,6 +406,9 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 #+END_SRC
 * File format modes
 ** LaTeX
+#+begin_src latex
+(setq +latex-viewers '(pdf-tools))
+#+end_src
 ** AUCTEX
 #+BEGIN_SRC emacs-lisp
 ;; AUC-TEX
@@ -537,6 +540,7 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 			     (org . t)
 			     (python . t)
 			     (shell . t)
+			     (dot . t)
 			     ;; (coq . nil)
 			     ))
 
@@ -571,6 +575,7 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 (setq org-confirm-babel-evaluate 'nil)
 
 (add-to-list 'org-src-lang-modes '("toml" . "conf-toml"))
+
 #+END_SRC
 
 #+begin_src emacs-lisp
@@ -630,14 +635,47 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 #+end_src
 
 ** C/C++ coding
-** Indentation
+*** Indentation
 #+BEGIN_SRC emacs-lisp
-  ;; C indentation
+;; C indentation
 
-  (setq c-default-style "linux"
-	c-basic-offset 2
-	tab-width 2
-	indent-tabs-mode t)
+(setq c-default-style "cc-mode"
+      c-basic-offset 2
+      tab-width 2
+      indent-tabs-mode t)
+#+END_SRC
+*** C++ - Clangd
+#+BEGIN_SRC emacs-lisp
+;; (setq package-selected-packages '(lsp-mode yasnippet lsp-treemacs ;; helm-lsp
+;;     projectile hydra flycheck company avy which-key ;; helm-xref
+;;     dap-mode))
+
+;; (when (cl-find-if-not #'package-installed-p package-selected-packages)
+;;   (package-refresh-contents)
+;;   (mapc #'package-install package-selected-packages))
+
+;; sample `helm' configuration use https://github.com/emacs-helm/helm/ for details
+;; (helm-mode)
+;; (require 'helm-xref)
+;; (define-key global-map [remap find-file] #'helm-find-files)
+;; (define-key global-map [remap execute-extended-command] #'helm-M-x)
+;; (define-key global-map [remap switch-to-buffer] #'helm-mini)
+
+;; (which-key-mode)
+;; (add-hook 'c-mode-hook 'lsp)
+;; (add-hook 'c++-mode-hook 'lsp)
+
+;; (setq gc-cons-threshold (* 100 1024 1024)
+;;       read-process-output-max (* 1024 1024)
+;;       treemacs-space-between-root-nodes nil
+;;       company-idle-delay 0.0
+;;       company-minimum-prefix-length 1
+;;       lsp-idle-delay 0.1)  ;; clangd is fast
+
+;; (with-eval-after-load 'lsp-mode
+;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
+;;   (require 'dap-cpptools)
+;;   (yas-global-mode))
 #+END_SRC
 
 ** Rust
@@ -658,39 +696,11 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 ;;     (setq-local compilation-ask-about-save nil)))
 ;; (add-hook 'rustic-mode-hook 'rustic-mode-auto-save-hook)
 #+END_SRC
-** C++ - Clangd
-#+BEGIN_SRC emacs-lisp
-;; (setq package-selected-packages '(lsp-mode yasnippet lsp-treemacs ;; helm-lsp
-;;     projectile hydra flycheck company avy which-key ;; helm-xref
-;;     dap-mode))
 
-;; (when (cl-find-if-not #'package-installed-p package-selected-packages)
-;;   (package-refresh-contents)
-;;   (mapc #'package-install package-selected-packages))
-
-;; sample `helm' configuration use https://github.com/emacs-helm/helm/ for details
-;; (helm-mode)
-;; (require 'helm-xref)
-;; (define-key global-map [remap find-file] #'helm-find-files)
-;; (define-key global-map [remap execute-extended-command] #'helm-M-x)
-;; (define-key global-map [remap switch-to-buffer] #'helm-mini)
-
-;; (which-key-mode)
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-
-(setq gc-cons-threshold (* 100 1024 1024)
-      read-process-output-max (* 1024 1024)
-      treemacs-space-between-root-nodes nil
-      company-idle-delay 0.0
-      company-minimum-prefix-length 1
-      lsp-idle-delay 0.1)  ;; clangd is fast
-
-;; (with-eval-after-load 'lsp-mode
-;;   (add-hook 'lsp-mode-hook #'lsp-enable-which-key-integration)
-;;   (require 'dap-cpptools)
-;;   (yas-global-mode))
-#+END_SRC
+#+begin_src emacs-lisp
+(setq lsp-auto-guess-root nil)
+;; To remove workspaces run: lsp-workspace-folders-remove
+#+end_src
 
 ** Coq
 #+begin_src emacs-lisp
@@ -1557,7 +1567,10 @@ create one.  Return the initialized session."
 #+end_src
 ** Ocaml
 #+begin_src elisp
-(add-to-list 'load-path "/home/au538501/.opam/hacspec-v2/share/emacs/site-lisp")
+;; (add-to-list 'load-path "/home/au538501/.opam/hacspec/share/emacs/site-lisp")
+(add-to-list 'load-path "/home/au538501/.opam/hacspec_ovn/share/emacs/site-lisp")
+(add-to-list 'load-path "/home/au538501/.opam/dolphin/share/emacs/site-lisp")
+;; opam install ocp-indent
 (require 'ocp-indent)
 #+end_src
 
@@ -1623,6 +1636,11 @@ https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
         languagetool-console-command "/snap/languagetool/current/usr/bin/languagetool-commandline.jar"
         languagetool-server-command "/snap/languagetool/current/usr/bin/languagetool-server.jar"))
 
+
+(setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+        languagetool-console-command "/snap/languagetool/current/usr/bin/languagetool-commandline.jar"
+        languagetool-server-command "/snap/languagetool/current/usr/bin/languagetool-server.jar")
+
 (use-package flycheck-languagetool
   :ensure t
   :hook (text-mode . flycheck-languagetool-setup)
@@ -1665,4 +1683,21 @@ https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
 ;; (setq evil-mode-line-format nil
 ;;       evil-insert-state-cursor '(bar "White")
 ;;       evil-visual-state-cursor '(box "#F86155"))
+#+end_src
+* fstar
+#+begin_src emacs-lisp
+(setq-default fstar-executable "~/.opam/fstar_proverif/bin/fstar.exe")
+(setq-default fstar-smt-executable "~/.opam/fstar_proverif/bin/z3")
+#+end_src
+* proverif
+#+begin_src emacs-lisp
+(setq auto-mode-alist
+      (cons '("\\.horn$" . proverif-horn-mode) 
+	    (cons '("\\.horntype$" . proverif-horntype-mode) 
+		  (cons '("\\.pv[l]?$" . proverif-pv-mode) 
+			(cons '("\\.pi$" . proverif-pi-mode) auto-mode-alist)))))
+(autoload 'proverif-pv-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-pi-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-horn-mode "proverif" "Major mode for editing ProVerif code." t)
+(autoload 'proverif-horntype-mode "proverif" "Major mode for editing ProVerif code." t)
 #+end_src
