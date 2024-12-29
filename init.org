@@ -1675,7 +1675,9 @@ https://www.emacswiki.org/emacs/Reference_Sheet_by_Aaron_Hawley
 ;; example of customizing colors
 (custom-set-faces '(line-number-current-line ((t :weight bold
                                                  :foreground "goldenrod"
-                                                 :background "slate gray"))))
+						 :inherit 'default
+                                                 :background "slate gray"
+						 ))))
 
 ;; (setq evil-emacs-state-modes nil)
 ;; (setq evil-insert-state-modes nil)
