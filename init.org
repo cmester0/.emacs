@@ -266,37 +266,39 @@ You may find `M-x list-faces-display` or `M-x list-colors-display` helpful. And 
 (set-default-coding-systems 'utf-8-unix)
 
 ;; Font test: ℕ𝓟⧺×≠≥≤±¬∨∧∃∀λ⟿⟹⊥⊤⊢
-;; Font emoji test: ❤🧡💛💚💙💜 🫀
+;; Font emoji test: ❤🧡💛💚💙💜🫀
+;; "🧡" ❤
+;; :purple_heart:
 
-(set-face-attribute 'default nil :family "Noto Mono")
-;; (set-frame-font "Noto Mono 13" nil t)
+;; (set-fontset-font t 'emoji "Noto Color Emoji" nil 'prepend)
+;; (set-fontset-font t 'symbol "Noto Emoji" nil 'append)
 
-;; (set-fontset-font t 'unicode (font-spec :family "Noto Mono" :height 100) nil 'append)
+;; (set-face-attribute 'default nil :family "Noto Emoji Light")
+;; (set-face-attribute 'default nil :family "Noto Color Emoji")
+;; (set-face-attribute 'default nil :family "Segoe UI Emoji")
 
-;; DejaVu Sans Mono ; Noto Mono ; Roboto Mono
+;; ✏🎉
+;; 🧡🧡
 
-(custom-set-faces
- '(default ((t (:foreground "white" :stipple nil :weight normal :height 150 :width normal))))
- '(variable-pitch ((t (:family "Noto Sans" :height 150 :weight light)))))
+(if (eq system-type 'windows-nt)
+  (progn
+   (set-fontset-font t nil "Noto Mono" nil 'append)
+   ;; (set-fontset-font t nil "DejaVu Sans Mono" nil 'append)
 
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x2764 . #x2764)
-              (font-spec :family "Noto Color Emoji")))
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x1f499 . #x1f49c)
-              (font-spec :family "Noto Color Emoji")))
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x1f7e5 . #x1f9e1)
-              (font-spec :family "Noto Color Emoji")))
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x1f534 . #x1f535)
-              (font-spec :family "Noto Color Emoji")))
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x1f7e0 . #x1f7e3)
-              (font-spec :family "Noto Color Emoji")))
-(if (>= emacs-major-version 27)
-    (set-fontset-font t '(#x26aa . #x26ab)
-              (font-spec :family "Noto Color Emoji")))
+   (set-fontset-font t 'emoji "Noto Emoji Light")
+   (set-fontset-font t ?❤ "Noto Emoji Light")
+   (set-fontset-font t ?𝓟 "TeX Gyre DejaVu Math")
+   (set-fontset-font t ?⟿ "TeX Gyre DejaVu Math")
+   (set-fontset-font t ?⟹ "TeX Gyre DejaVu Math")
+   (set-fontset-font t ?ℕ "TeX Gyre DejaVu Math")
+   )
+  (progn
+   (set-fontset-font t nil "Noto Mono" nil 'append)
+
+   (set-fontset-font t 'emoji "Noto Color Emoji")
+   (set-fontset-font t ?❤ "Noto Color Emoji")
+   )
+  )
 #+END_SRC
 
 ** Font-lock-*
